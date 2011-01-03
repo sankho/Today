@@ -169,6 +169,11 @@ body {
     font:normal 16px/20px Arial;
 }
 
+#today ol li.done {
+    border-color:#ccc;
+    color:#ccc;
+}
+
 #today ol li a {
     font:normal 14px/16px helvetica;
 }

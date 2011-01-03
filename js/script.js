@@ -26,9 +26,27 @@
     
     function writeList() {
         list.empty();
+        
+        var done = [];
+        var todo = [];
+        
         for(var i=0; i<db.length; i++) {
-            writeListItem(db[i]);
+            var item = db[i];
+            if (item.done) {
+                done.push(item);
+            } else {
+                todo.push(item);
+            }
         }
+        
+        for(var i=0; i<done.length; i++) {
+            writeListItem(done[i]);
+        }
+
+        for(var i=0; i<todo.length; i++) {
+            writeListItem(todo[i]);
+        }
+
     }
     
     function writeListItem(todo) {
@@ -47,7 +65,6 @@
         item.append(done);
         
         if (todo.done) {
-            done.attr('checked',true);
             item.addClass('done');
         }
         
@@ -76,9 +93,11 @@
     
     function markAsDone(e) {
         e.preventDefault();
-        var that = $(this);
-        that.parent().toggleClass('done');
-        // mark as done in database and save
+        var that   = $(this);
+        var parent = that.parent();
+        parent.toggleClass('done');
+        db[parseInt(that.attr('rel'),10)].done = parent.hasClass('done');
+        saveDB();
     }
     
     function deleteItem(e) {
