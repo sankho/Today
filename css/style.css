@@ -170,12 +170,16 @@ body {
 }
 
 #today ol li.done {
-    border-color:#ccc;
-    color:#ccc;
+    border-color:#e1e1e1;
+    color:#d1d1d1;
 }
 
 #today ol li a {
     font:normal 14px/16px helvetica;
+}
+
+#today ol li.done a.done {
+    color:#d1d1d1;
 }
 
 #today ol li a.delete {

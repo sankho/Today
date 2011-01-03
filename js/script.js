@@ -27,6 +27,13 @@
     function writeList() {
         list.empty();
         
+        //*/
+        for(var i=0; i<db.length; i++) {
+            writeListItem(db[i]);
+        }
+        //*/
+        
+        /*
         var done = [];
         var todo = [];
         
@@ -46,7 +53,7 @@
         for(var i=0; i<todo.length; i++) {
             writeListItem(todo[i]);
         }
-
+        //*/
     }
     
     function writeListItem(todo) {
