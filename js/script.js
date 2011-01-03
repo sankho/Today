@@ -68,6 +68,7 @@
             var todo = { text : what, done: false };
             writeListItem(todo);
             saveListItem(todo);
+            form[0].reset();
         } else {
             alert('What was that?');
         }
