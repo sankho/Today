@@ -127,8 +127,8 @@ body {
 }
 
 #today form #what {
-    font:normal 22px/45px Arial;
-    padding:0 8px;
+    font:normal 22px/2px Arial;
+    padding:7px 8px;
     width:75%;
     margin-right:2.5%;
     display:inline;
@@ -138,8 +138,8 @@ body {
     border:1px solid #333;
     background:#000;
     color:#fff;
-    font:normal 22px/45px Helvetica;
-    padding:0 10px;
+    font:normal 22px/22px Helvetica;
+    padding:8px 10px;
     display:inline;
 }
 
@@ -159,6 +159,9 @@ body {
 
 #today ol {
     margin-top:25px;
+    height:450px;
+    margin-top:25px;
+    overflow:auto;
 }
 
 #today ol li {

@@ -12,16 +12,24 @@
     var form = that.find('form');
     var list = that.find('ol');
     
-    var db   = localStorage['today'];
-    if (db && db.length > 0) {
-        db = JSON.parse(db);
-        writeList();
+    var db    = localStorage['today'];
+    var last  = parseInt(localStorage['todayLastSaved'],10);
+    var date  = new Date().getDate();
+    
+    if (last && last === date) {
+        if (db && db.length > 0) {
+            db = JSON.parse(db);
+            writeList();
+        } else {
+            db = [];
+        }
     } else {
         db = [];
     }
     
     function saveDB() {
-        localStorage['today'] = JSON.stringify(db);
+        localStorage['today']          = JSON.stringify(db);
+        localStorage['todayLastSaved'] = new Date().getDate();
     }
     
     function writeList() {
