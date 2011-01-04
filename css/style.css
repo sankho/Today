@@ -87,19 +87,16 @@ button {  width: auto; overflow: visible; }
  */
 
 body {
-    background:#000;
 }
 
 #container {
-    height:600px;
-    background:#fff;
     overflow:hidden;
 }
 
 #yesterday {
-    background:#000 url(../images/yesterday.png) no-repeat 0 20px;
-    width:27px;
-    height:565px;
+    background:#f1f1f1 url(../images/yesterday.png) no-repeat 0 20px;
+    width:35px;
+    height:600px;
     float:left;
     display:block;
     text-indent:-999em;
@@ -109,21 +106,24 @@ body {
 #today {
     float:left;
     background:#fff;
-    height:100%;
-    padding:10px 0 0 80px;
+    height:600px;
+    padding:20px 0 0 80px;
 }
 
 #today h1 {
-    text-indent:-999em;
-    background:transparent url(../images/today.png) no-repeat 0 -40px;
-    width:171px;
-    height:878px;
-    float:left;
+    font:bold 130px/120px Helvetica;
+    color:#333;
+    background:rgba(255,255,255,0.9);
+    text-transform:uppercase;
     display:block;
+    position:fixed;
+    bottom:30px;
+    left:0;
+    z-index:1;
 }
 
 #today form {
-    width:550px;
+    width:800px;
 }
 
 #today form #what {
@@ -132,7 +132,12 @@ body {
     width:75%;
     margin-right:2.5%;
     display:inline;
+    
 }
+
+    #what.placeholder { color:#666; }
+    #what::-webkit-input-placeholder { color:#666; }
+    #what::-moz-placeholder { color:#666; }
 
 #today form #add {
     border:1px solid #333;
@@ -158,10 +163,14 @@ body {
 }
 
 #today ol {
-    margin-top:25px;
-    height:450px;
-    margin-top:25px;
+    margin:25px 0 0;
+    padding:0 10px;
+    list-style-type:none;
+    max-height:450px;
     overflow:auto;
+    background:rgba(255,255,255,0.95);
+    z-index:2;
+    position:relative;
 }
 
 #today ol li {
@@ -199,9 +208,9 @@ body {
 }
 
 #tomorrow {
-    background:#000 url(../images/tomorrow.png) no-repeat 0 20px;
-    width:27px;
-    height:550px;
+    background:#f1f1f1 url(../images/tomorrow.png) no-repeat 0 20px;
+    width:35px;
+    height:600px;
     float:right;
     display:block;
     text-indent:-999em;
@@ -209,7 +218,7 @@ body {
 }
 
 #yesterday, #tomorrow {
-    -webkit-transition:0.75s linear all;
+    -webkit-transition:0.45s linear all;
 }
 
 #yesterday:hover, #tomorrow:hover {

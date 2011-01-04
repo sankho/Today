@@ -8,6 +8,8 @@
         return alert('Get a better browser');
     }
         
+    $('input,textarea').placeholder();
+        
     var that = $('#today');
     var form = that.find('form');
     var list = that.find('ol');
@@ -127,9 +129,21 @@
         }
     }
     
+    function animateToday() {
+        var hour  = new Date().getHours();
+        var value = (hour / 24) * 100;
+            value = value.toString() + '%';
+        $('#today h1').animate({
+            left : value
+        },1000);
+        
+    }
+    
     /** EVENT BINDINGS **/
     form.submit(handleForm);
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
+    animateToday();
+    setInterval(animateToday,30000);
     
 })(jQuery);
