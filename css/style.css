@@ -190,6 +190,7 @@ hr#a-full-day {
     padding:0 10px 0 15px;
     list-style-type:none;
     max-height:450px;
+    width:765px;
     overflow:auto;
     background:rgba(255,255,255,0.95);
     z-index:2;
