@@ -143,7 +143,7 @@
         var bar = $('#today-bar');
         if (!bar.length) {
             bar = $('<hr id="today-bar" />');
-            $('body').append(bar);
+            $('body').append(bar).append('<hr id="a-full-day" />');
         }
         
         var day = 24 * 60;

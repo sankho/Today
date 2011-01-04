@@ -101,6 +101,7 @@ body {
     display:block;
     text-indent:-999em;
     padding-top:80px;
+    opacity:0.6;
 }
 
 #today {
@@ -111,18 +112,18 @@ body {
 }
 
 #today h1 {
-    font:bold 130px/120px Helvetica;
+    font:bold 100px/120px Helvetica;
     color:#e1e1e1;
     background:rgba(255,255,255,0.9);
     text-transform:uppercase;
     position:fixed;
     bottom:30px;
-    left:80px;
+    left:115px;
     z-index:1;
 }
 
 #today h1 small {
-    font:normal 30px/45px Arial;
+    font:normal 20px/45px Arial;
     color:#e1e1e1;
     text-transform:none;
     padding-left:10px;
@@ -132,27 +133,34 @@ body {
     width:800px;
 }
 
-hr#today-bar {
+hr#today-bar, hr#a-full-day {
     border:0 none;
     padding:0;
     margin:0;
     position:fixed;
     bottom:25px;
     border-top:1px solid #d33;
+    z-index:2;
+}
+
+hr#a-full-day {
+    width:100%;
+    border-color:#e1e1e1;
+    z-index:1;
 }
 
 #today form #what {
     font:normal 22px/2px Arial;
     padding:7px 8px;
-    width:75%;
+    width:685px;
     margin-right:2.5%;
     display:inline;
     
 }
 
-    #what.placeholder { color:#666; }
-    #what::-webkit-input-placeholder { color:#666; }
-    #what::-moz-placeholder { color:#666; }
+    #what.placeholder { color:#bbb; }
+    #what::-webkit-input-placeholder { color:#bbb; }
+    #what::-moz-placeholder { color:#bbb; }
 
 #today form #add {
     border:1px solid #333;
@@ -179,7 +187,7 @@ hr#today-bar {
 
 #today ol {
     margin:25px 0 0;
-    padding:0 10px;
+    padding:0 10px 0 15px;
     list-style-type:none;
     max-height:450px;
     overflow:auto;
@@ -193,7 +201,7 @@ hr#today-bar {
     border-bottom:1px solid #d33;
     margin-bottom:10px;
     padding-bottom:5px;
-    font:normal 16px/20px Arial;
+    font:normal 20px/25px Arial;
 }
 
 #today ol li.done {
@@ -202,7 +210,7 @@ hr#today-bar {
 }
 
 #today ol li a {
-    font:normal 14px/16px helvetica;
+    font:normal 18px/20px helvetica;
 }
 
 #today ol li.done a.done {
@@ -230,6 +238,7 @@ hr#today-bar {
     display:block;
     text-indent:-999em;
     padding-top:80px;
+    opacity:0.4;
 }
 
 #yesterday, #tomorrow {
