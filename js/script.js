@@ -9,7 +9,11 @@
     }
         
     $('input,textarea').placeholder();
-        
+    
+    var lastHour = parseInt(localStorage['lastHour'],10) || 18;  // 6 o'clock
+    var lastMin  = parseInt(localStorage['lastMin'],10) || 30;  // 30 minutes
+    var day      = 24 * 60;
+    
     var that = $('#today');
     var form = that.find('form');
     var list = that.find('ol');
@@ -121,39 +125,89 @@
         e.preventDefault();
         var that  = $(this);
         var li    = that.parent();
-        //if (li.hasClass('done')) {
-            var index = that.attr('rel');
-            db.splice(index,1);
-            saveDB();
-            writeList();
-        //}
+        var index = that.attr('rel');
+        
+        db.splice(index,1);
+        saveDB();
+        writeList();
     }
     
     function setCounter() {
         var hour  = new Date().getHours();
         var min   = new Date().getMinutes();
-        var hleft = 23 - hour;
-        var mleft = 59 - min;
         
-        var string = [
-            hleft, ' hours and ', mleft, ' minutes remaining'
-        ];
+        var endTime = ((lastHour * 60) + lastMin);
+        var curTime = ((hour * 60) + min);
         
-        $('#today h1 small').text(string.join(''));
-        var bar = $('#today-bar');
-        if (!bar.length) {
-            bar = $('<hr id="today-bar" />');
-            $('body').append(bar).append('<hr id="a-full-day" />');
+        var minutesLeft = endTime - curTime;
+        
+        if (minutesLeft < 1) {
+            $('#today h1 small').text("Time's up!");
+        } else {
+        
+            var hleft = parseInt((minutesLeft / 60),10);
+            var mleft = minutesLeft % 60;
+            
+            var last   = lastHour;
+            var period = 'AM';
+            if (lastHour > 12) {
+                last = last - 12;
+                period = 'PM';
+            }
+            if (lastMin < 10) {
+                lastMin = '0' + lastMin;
+            }
+            
+            var string = [
+                hleft, ' hour(s) and ', mleft, ' minute(s) before ', last, ':', lastMin, ' ', period
+            ];
+            
+            $('#today h1 small').text(string.join(''));
+            var bar = $('#today-bar');
+            
+            var now = (hour * 60) + min; 
+            var value = (now / day) * 100;
+                value = value.toString() + '%';
+            bar.animate({
+                width : value
+            },1000);
         }
         
-        var day = 24 * 60;
-        var now = (hour * 60) + min; 
-        var value = (now / day) * 100;
-            value = value.toString() + '%';
-        bar.animate({
-            width : value
-        },1000);
+    }
+    
+    function startMovingSlider(e) {
+        e.preventDefault();
+        var body = $('body');
+        body.mousemove(moveSlider);
+        body.mouseup(function() {
+            body.unbind('mousemove',moveSlider);
+        });
+    }
+    
+    function moveSlider(e) {
+        var slider = $('#slider');
+        var offset = slider.width() / 2;
+        var leftVal = e.pageX - offset + 'px';
+        slider.css({
+            left    : leftVal
+        });
         
+        var width       = $('body').width();
+        var timePercent = e.pageX / width;
+        
+        var minutes = timePercent * day;
+        
+        lastHour = localStorage['lastHour'] = parseInt(minutes / 60,10);
+        lastMin  = localStorage['lastMin']  = parseInt(minutes % 60,10);
+        setCounter();
+    }
+    
+    function sliderResize() {
+        var leftVal = ((lastHour * 60 + lastMin) / day) * 100 + '%';
+        $("#slider").css({
+          left : leftVal,
+          display : 'block'
+        });
     }
     
     function editItem(e) {
@@ -200,7 +254,11 @@
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
     list.find('li a.edit').live('click', editItem);
+    $('#slider').live('mousedown',startMovingSlider);
     setCounter();
     setInterval(setCounter,60000);  // 1 minute?
+    
+    sliderResize();
+    $(window).resize(sliderResize);
     
 })(jQuery);

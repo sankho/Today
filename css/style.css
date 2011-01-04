@@ -134,8 +134,8 @@ hr#today-bar, hr#a-full-day {
     border:0 none;
     padding:0;
     margin:0;
-    position:fixed;
-    top:10px;
+    position:absolute;
+    top:15px;
     border-top:1px solid #d33;
     z-index:2;
 }
@@ -144,6 +144,18 @@ hr#a-full-day {
     width:100%;
     border-color:#e1e1e1;
     z-index:1;
+}
+
+#slider {
+    position:absolute;
+    z-index:4;
+    width:10px;
+    height:10px;
+    top:11px;
+    right:40px;
+    background:#d33;
+    cursor:pointer;
+    display:none;
 }
 
 #today form #what {
@@ -191,7 +203,7 @@ hr#a-full-day {
     list-style-type:none;
     width:765px;
     background:rgba(255,255,255,0.85);
-    z-index:2;
+    z-index:3;
     position:relative;
 }
 
@@ -200,7 +212,11 @@ hr#a-full-day {
     border-bottom:1px solid #d33;
     margin-bottom:10px;
     padding-bottom:5px;
+}
+
+#today ol li p {
     font:normal 20px/25px Arial;
+    padding:6px 0;
 }
 
 #today ol li form {
@@ -210,11 +226,14 @@ hr#a-full-day {
 
 #today ol li form input[type="text"] {
     width:630px;
+    font:normal 20px/25px Arial;
+    margin:6px 0;
 }
 
 #today ol li form input[type="submit"] {
     padding-top:1px;
     margin-left:21px;
+    font:normal 20px/25px Arial;
 }
 
 #today ol li.done {
