@@ -107,7 +107,6 @@ body {
 }
 
 #today {
-    float:left;
     background:#fff;
     padding:20px 0 0 80px;
 }
@@ -160,20 +159,23 @@ hr#a-full-day {
     #what::-webkit-input-placeholder { color:#bbb; }
     #what::-moz-placeholder { color:#bbb; }
 
-#today form #add {
-    border:1px solid #333;
-    background:#000;
-    color:#fff;
+#today form #add {    
     font:normal 22px/22px Helvetica;
     padding:8px 10px;
+    background:#000;
+    color:#fff;
+}
+
+#today form input[type="submit"] {
+    border:1px solid #333;
     display:inline;
 }
 
-#today form #add:hover {
+#today form input[type="submit"] {
     background:#333;
 }
 
-#today form #add:active {
+#today form input[type="submit"] {
     color:#000;
     background:#fff;
 }
@@ -201,6 +203,20 @@ hr#a-full-day {
     font:normal 20px/25px Arial;
 }
 
+#today ol li form {
+    width:auto;
+    margin-left:-3px;
+}
+
+#today ol li form input[type="text"] {
+    width:630px;
+}
+
+#today ol li form input[type="submit"] {
+    padding-top:1px;
+    margin-left:21px;
+}
+
 #today ol li.done {
     border-color:#e1e1e1;
     color:#d1d1d1;
@@ -214,17 +230,16 @@ hr#a-full-day {
     color:#d1d1d1;
 }
 
+#today ol li a.delete, #today ol li a.edit {
+    float:right;
+}
+
 #today ol li a.delete {
-    display:none;
     margin-left:10px;
 }
 
 #today ol li.done p, #today ol li.done a.done {
     text-decoration:line-through;
-}
-
-#today ol li.done a.delete {
-    display:inline;
 }
 
 #tomorrow {

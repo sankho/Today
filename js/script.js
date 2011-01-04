@@ -75,7 +75,7 @@
         var done = [
             '<a href="#" class="done" rel="',
             size,
-            '">done</a>',
+            '">mark as done</a>',
         ];
         done = done.join('');
         
@@ -85,7 +85,7 @@
             item.addClass('done');
         }
         
-        item.append('<a href="#" class="delete" rel="' + size + '">delete</a>');
+        item.append('<a href="#" class="delete" rel="' + size + '">delete</a><a href="#" class="edit" rel="' + size + '">edit</a>');
         list.prepend(item);
     }
     
@@ -129,7 +129,7 @@
         }
     }
     
-    function animateToday() {
+    function setCounter() {
         var hour  = new Date().getHours();
         var min   = new Date().getMinutes();
         var hleft = 23 - hour;
@@ -156,11 +156,51 @@
         
     }
     
+    function editItem(e) {
+        e.preventDefault();
+        var that = $(this);
+        var key  = that.attr('rel');
+        var li   = that.parent();
+        var p    = li.find('p');
+        
+        if (p.is(':visible')) {
+            p.hide();
+            var form = $([
+                '<form>',
+                    '<input type="text" value="',
+                    p.text(),
+                    '" /><input type="submit" value="ok" />',
+                '</form>'
+            ].join(''));
+            
+            li.prepend(form);
+            
+            form.submit(function(e) {
+                e.preventDefault();
+                var text = form.find('input[type="text"]').val();
+                if (!text) {
+                    return alert('why not just delete it?');
+                } else {
+                    p.text(text);
+                    db[key].text = text;
+                    saveDB();
+                    form.remove();
+                    p.show();
+                }
+            });
+            
+        } else {
+            li.find('form').remove();
+            p.show();
+        }
+    }
+    
     /** EVENT BINDINGS **/
     form.submit(handleForm);
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
-    animateToday();
-    setInterval(animateToday,60000);  // 1 minute?
+    list.find('li a.edit').live('click', editItem);
+    setCounter();
+    setInterval(setCounter,60000);  // 1 minute?
     
 })(jQuery);
