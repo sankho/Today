@@ -121,12 +121,12 @@
         e.preventDefault();
         var that  = $(this);
         var li    = that.parent();
-        if (li.hasClass('done')) {
+        //if (li.hasClass('done')) {
             var index = that.attr('rel');
             db.splice(index,1);
             saveDB();
             writeList();
-        }
+        //}
     }
     
     function setCounter() {
