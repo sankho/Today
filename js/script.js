@@ -132,9 +132,15 @@
     function animateToday() {
         var hour  = new Date().getHours();
         var value = (hour / 24) * 100;
-            value = value.toString() + '%';
-        $('#today h1').animate({
-            left : value
+        value = value.toString() + '%';
+        $('#today h1 small').text('is ' + value + ' completed');
+        var bar = $('#today-bar');
+        if (!bar.length) {
+            bar = $('<hr id="today-bar" />');
+            $('body').append(bar);
+        }
+        bar.animate({
+            width : value
         },1000);
         
     }
@@ -144,6 +150,6 @@
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
     animateToday();
-    setInterval(animateToday,30000);
+    setInterval(animateToday,900000);  // 15 minutes?
     
 })(jQuery);
