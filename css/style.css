@@ -112,7 +112,7 @@ body {
 
 #today h1 {
     font:bold 130px/120px Helvetica;
-    color:#333;
+    color:#e1e1e1;
     background:rgba(255,255,255,0.9);
     text-transform:uppercase;
     position:fixed;

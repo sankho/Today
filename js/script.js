@@ -133,7 +133,7 @@
         var hour  = new Date().getHours();
         var min   = new Date().getMinutes();
         var hleft = 23 - hour;
-        var mleft = 60 - min;
+        var mleft = 59 - min;
         
         var string = [
             hleft, ' hours and ', mleft, ' minutes remaining'
