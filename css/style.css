@@ -96,8 +96,10 @@ body {
 #yesterday {
     background:#f1f1f1 url(../images/yesterday.png) no-repeat 0 20px;
     width:35px;
-    height:600px;
-    float:left;
+    height:100%;
+    position:fixed;
+    left:0;
+    top:0;
     display:block;
     text-indent:-999em;
     padding-top:80px;
@@ -107,7 +109,6 @@ body {
 #today {
     float:left;
     background:#fff;
-    height:600px;
     padding:20px 0 0 80px;
 }
 
@@ -116,9 +117,6 @@ body {
     color:#e1e1e1;
     background:rgba(255,255,255,0.9);
     text-transform:uppercase;
-    position:fixed;
-    bottom:30px;
-    left:115px;
     z-index:1;
 }
 
@@ -138,7 +136,7 @@ hr#today-bar, hr#a-full-day {
     padding:0;
     margin:0;
     position:fixed;
-    bottom:25px;
+    top:10px;
     border-top:1px solid #d33;
     z-index:2;
 }
@@ -189,10 +187,8 @@ hr#a-full-day {
     margin:25px 0 0;
     padding:0 10px 0 15px;
     list-style-type:none;
-    max-height:450px;
     width:765px;
-    overflow:auto;
-    background:rgba(255,255,255,0.95);
+    background:rgba(255,255,255,0.85);
     z-index:2;
     position:relative;
 }
@@ -234,12 +230,14 @@ hr#a-full-day {
 #tomorrow {
     background:#f1f1f1 url(../images/tomorrow.png) no-repeat 0 20px;
     width:35px;
-    height:600px;
-    float:right;
+    height:100%;
+    position:fixed;
+    right:0;
+    top:0;
     display:block;
     text-indent:-999em;
     padding-top:80px;
-    opacity:0.4;
+    opacity:0.6;
 }
 
 #yesterday, #tomorrow {
