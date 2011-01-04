@@ -122,7 +122,10 @@ body {
 }
 
 #today h1 small {
-    font:normal 20px/30px Helvetica;
+    font:normal 30px/45px Arial;
+    color:#e1e1e1;
+    text-transform:none;
+    padding-left:10px;
 }
 
 #today form {

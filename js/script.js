@@ -131,14 +131,25 @@
     
     function animateToday() {
         var hour  = new Date().getHours();
-        var value = (hour / 24) * 100;
-        value = value.toString() + '%';
-        $('#today h1 small').text('is ' + value + ' completed');
+        var min   = new Date().getMinutes();
+        var hleft = 23 - hour;
+        var mleft = 60 - min;
+        
+        var string = [
+            hleft, ' hours and ', mleft, ' minutes remaining'
+        ];
+        
+        $('#today h1 small').text(string.join(''));
         var bar = $('#today-bar');
         if (!bar.length) {
             bar = $('<hr id="today-bar" />');
             $('body').append(bar);
         }
+        
+        var day = 24 * 60;
+        var now = (hour * 60) + min; 
+        var value = (now / day) * 100;
+            value = value.toString() + '%';
         bar.animate({
             width : value
         },1000);
@@ -150,6 +161,6 @@
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
     animateToday();
-    setInterval(animateToday,900000);  // 15 minutes?
+    setInterval(animateToday,60000);  // 1 minute?
     
 })(jQuery);
