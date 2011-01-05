@@ -111,23 +111,36 @@ body {
     padding:20px 0 0 80px;
 }
 
-#today h1 {
+#today .header h1 {
     font:bold 100px/120px Helvetica;
     color:#e1e1e1;
     background:rgba(255,255,255,0.9);
     text-transform:uppercase;
     z-index:1;
+    float:left;
+    margin-right:10px;
 }
 
-#today h1 small {
-    font:normal 20px/45px Arial;
-    color:#e1e1e1;
+#today .header .meta {
+    font:normal 20px/27px Arial;
+    color:#c0c0c0;
     text-transform:none;
-    padding-left:10px;
+}
+
+#today .header .meta.top {
+    padding-top:18px;
 }
 
 #today form {
     width:800px;
+}
+
+#today .fyi {
+    font:normal 16px/25px Arial;
+    color:#c1c1c1;
+    margin:20px 0 0 20px;
+    padding-left:2px;
+    width:300px;
 }
 
 hr#today-bar, hr#a-full-day {
@@ -198,7 +211,7 @@ hr#a-full-day {
 }
 
 #today ol {
-    margin:25px 0 0;
+    margin:15px 0 0;
     padding:0 10px 0 15px;
     list-style-type:none;
     width:765px;

@@ -147,7 +147,7 @@
         var minutesLeft = endTime - curTime;
         
         if (minutesLeft < 1) {
-            $('#today h1 small').text("Time's up!");
+            $('#today .header .time').text("is done.");
         } else {
         
             var hleft = parseInt((minutesLeft / 60),10);
@@ -167,17 +167,16 @@
                 hleft, ' hour(s) and ', mleft, ' minute(s) before ', last, ':', lastMin, ' ', period
             ];
             
-            $('#today h1 small').text(string.join(''));
-            var bar = $('#today-bar');
-            
-            var now = (hour * 60) + min; 
-            var value = (now / day) * 100;
-                value = value.toString() + '%';
-            bar.animate({
-                width : value
-            },1000);
+            $('#today .header .time').text(string.join(''));
         }
         
+        var bar = $('#today-bar');
+        var now = (hour * 60) + min; 
+        var value = (now / day) * 100;
+            value = value.toString() + '%';
+        bar.animate({
+            width : value
+        },1000);
     }
     
     function startMovingSlider(e) {
@@ -248,7 +247,6 @@
                     p.show();
                 }
             });
-            
         } else {
             li.find('form').remove();
             p.show();

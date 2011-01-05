@@ -28,11 +28,17 @@
     <h2 id="yesterday">Yesterday</h2>
     
     <div id="today">
-        <h1>Today<small></small></h1>
+        <div class="header clearfix">
+            <h1>Today</h1>
+            <div class="meta top">&nbsp;</div>
+            <div class="meta">&nbsp;</div>
+            <div class="meta time"></div>
+        </div>
         <form>
             <input type="text" id="what" placeholder="What do you need to do today? Type it here." />
             <input type="submit" id="add" value="Add" />
         </form>
+        <p class="fyi">All unsaved items are erased at midnight</p>
         <ol></ol>
     </div>
     
