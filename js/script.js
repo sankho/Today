@@ -95,6 +95,7 @@
         }
         
         item.append('<a href="#" class="done" rel="' + size + '">mark as done</a><a href="#" class="save" rel="' + size + '">' + save + ' for tomorrow</a><a href="#" class="delete" rel="' + size + '">delete</a><a href="#" class="edit" rel="' + size + '">edit</a>');
+        item.attr('rel',size);
         list.prepend(item);
     }
     
@@ -241,7 +242,7 @@
                     return alert('why not just delete it?');
                 } else {
                     p.text(text);
-                    db[key].text = text;
+                    db[li.attr('rel')].text = text;
                     saveDB();
                     form.remove();
                     p.show();
@@ -278,6 +279,7 @@
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
     list.find('li a.edit').live('click', editItem);
+    list.find('li p').live('dblclick', editItem);
     list.find('li a.save').live('click', saveItem);
     $('#slider').live('mousedown',startMovingSlider);
     setCounter();
