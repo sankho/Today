@@ -253,10 +253,6 @@ hr#a-full-day {
     margin-right:10px;
 }
 
-#today ol li.done a.done {
-    color:#d1d1d1;
-}
-
 #today ol li a.delete, #today ol li a.edit {
     float:right;
 }
@@ -265,7 +261,8 @@ hr#a-full-day {
     margin-left:10px;
 }
 
-#today ol li.done p, #today ol li.done a.done {
+#today ol li.done p, #today ol li.done a.done, #today ol li.done a.save {
+    color:#d1d1d1;
     text-decoration:line-through;
 }
 
