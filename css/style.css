@@ -263,6 +263,10 @@ hr#a-full-day {
     background:rgba(208,48,48,0.05);
 }
 
+#today ol li.done.save {
+    background:rgba(239,239,239,0.45);
+}
+
 #today ol li a {
     font:normal 18px/20px helvetica;
 }
