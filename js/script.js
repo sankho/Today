@@ -22,13 +22,20 @@
     var last  = parseInt(localStorage['todayLastSaved'],10);
     var date  = new Date().getDate();
     
-    if (last && last === date) {
-        if (db && db.length > 0) {
-            db = JSON.parse(db);
-            writeList();
-        } else {
-            db = [];
+    if (db && db.length > 0) {
+        db = JSON.parse(db);
+        if (last && last !== date) {
+            var newdb = [];
+            for (var i=0; i<db.length; i++) {
+                var item = db[i];
+                if (item.save) {
+                    newdb.push(item);
+                }
+            }
+            db = newdb;
+            saveDB();
         }
+        writeList();
     } else {
         db = [];
     }
@@ -76,20 +83,18 @@
         
         var size = list.find('li').length;
         
-        var done = [
-            '<a href="#" class="done" rel="',
-            size,
-            '">mark as done</a>',
-        ];
-        done = done.join('');
-        
-        item.append(done);
-        
         if (todo.done) {
             item.addClass('done');
         }
         
-        item.append('<a href="#" class="delete" rel="' + size + '">delete</a><a href="#" class="edit" rel="' + size + '">edit</a>');
+        var save = 'save';
+        
+        if (todo.save) {
+            item.addClass('save');
+            save = 'saved';
+        }
+        
+        item.append('<a href="#" class="done" rel="' + size + '">mark as done</a><a href="#" class="save" rel="' + size + '">' + save + ' for tomorrow</a><a href="#" class="delete" rel="' + size + '">delete</a><a href="#" class="edit" rel="' + size + '">edit</a>');
         list.prepend(item);
     }
     
@@ -219,10 +224,11 @@
         
         if (p.is(':visible')) {
             p.hide();
+            var text = p.text().replace(/"/g, '&quot;')
             var form = $([
                 '<form>',
                     '<input type="text" value="',
-                    p.text(),
+                    text,
                     '" /><input type="submit" value="ok" />',
                 '</form>'
             ].join(''));
@@ -249,11 +255,32 @@
         }
     }
     
+    function saveItem(e) {
+        e.preventDefault();
+        var that  = $(this);
+        var key   = that.attr('rel');
+        var li    = that.parent();
+        var saved = li.hasClass('save');
+        
+        if (saved) {
+            that.text('save for tomorrow');
+            li.removeClass('save');
+            db[key].save = false;
+        } else {
+            that.text('saved for tomorrow');
+            li.addClass('save');
+            db[key].save = true;
+        }
+        
+        saveDB();
+    }
+    
     /** EVENT BINDINGS **/
     form.submit(handleForm);
     list.find('li a.done').live('click', markAsDone);
     list.find('li a.delete').live('click', deleteItem);
     list.find('li a.edit').live('click', editItem);
+    list.find('li a.save').live('click', saveItem);
     $('#slider').live('mousedown',startMovingSlider);
     setCounter();
     setInterval(setCounter,60000);  // 1 minute?

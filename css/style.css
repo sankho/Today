@@ -211,7 +211,7 @@ hr#a-full-day {
     position:relative;
     border-bottom:1px solid #d33;
     margin-bottom:10px;
-    padding-bottom:5px;
+    padding:5px;
 }
 
 #today ol li p {
@@ -241,8 +241,16 @@ hr#a-full-day {
     color:#d1d1d1;
 }
 
+#today ol li.save {
+    background:rgba(208,48,48,0.05);
+}
+
 #today ol li a {
     font:normal 18px/20px helvetica;
+}
+
+#today ol li a.done {
+    margin-right:10px;
 }
 
 #today ol li.done a.done {
