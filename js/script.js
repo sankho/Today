@@ -50,7 +50,7 @@
         
         //*/
         for(var i=0; i<db.length; i++) {
-            writeListItem(db[i]);
+            writeListItem(db[i],i);
         }
         //*/
         
@@ -77,11 +77,11 @@
         //*/
     }
     
-    function writeListItem(todo) {
+    function writeListItem(todo,key) {
         var item = $('<li></li>');
         item.append('<p>' + todo.text + '</p>');
         
-        var size = list.find('li').length;
+        key = key || list.find('li').length;
         
         if (todo.done) {
             item.addClass('done');
@@ -94,9 +94,27 @@
             save = 'saved';
         }
         
-        item.append('<a href="#" class="done" rel="' + size + '">mark as done</a><a href="#" class="save" rel="' + size + '">' + save + ' for tomorrow</a><a href="#" class="delete" rel="' + size + '">delete</a><a href="#" class="edit" rel="' + size + '">edit</a>');
-        item.attr('rel',size);
+        item.append('<a href="#" class="done" rel="' + key + '">mark as done</a><a href="#" class="save" rel="' + key + '">' + save + ' for tomorrow</a><a href="#" class="delete" rel="' + key + '">delete</a><a href="#" class="edit" rel="' + key + '">edit</a>');
+        item.attr('rel',key);
         list.prepend(item);
+    }
+    
+    function sortList(e) {
+        e.preventDefault();
+        var _db = [];
+        for (var i=0; i<db.length; i++) {
+            if (db[i].done) {
+                _db.push(db[i]);
+            }
+        }
+        for (var i=0; i<db.length; i++) {
+            if (!db[i].done) {
+                _db.push(db[i]);
+            }
+        }
+        db = _db;
+        saveDB();
+        writeList();
     }
     
     function saveListItem(todo) {
@@ -281,6 +299,7 @@
     list.find('li a.edit').live('click', editItem);
     list.find('li p').live('dblclick', editItem);
     list.find('li a.save').live('click', saveItem);
+    $('#sort').click(sortList);
     $('#slider').live('mousedown',startMovingSlider);
     setCounter();
     setInterval(setCounter,60000);  // 1 minute?

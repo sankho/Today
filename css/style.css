@@ -137,10 +137,15 @@ body {
 
 #today .fyi {
     font:normal 16px/25px Arial;
-    color:#e2e2e2;
+    color:#ccc;
     margin:20px 0 0 20px;
     padding-left:2px;
-    width:300px;
+}
+
+#today a.tool {
+    font:normal 16px/25px Arial;
+    width:auto;
+    margin-right:10px;
 }
 
 hr#today-bar, hr#a-full-day {
