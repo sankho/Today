@@ -10,8 +10,8 @@
         
     $('input,textarea').placeholder();
     
-    var lastHour = parseInt(localStorage['lastHour'],10) || 18;  // 6 o'clock
-    var lastMin  = parseInt(localStorage['lastMin'],10) || 30;  // 30 minutes
+    var lastHour = localStorage['lastHour'] ? parseInt(localStorage['lastHour'],10) : 18;  // 6 o'clock
+    var lastMin  = localStorage['lastMin']  ? parseInt(localStorage['lastMin'],10)  : 30;  // 30 minutes
     var day      = 24 * 60;
     
     var that = $('#today');
