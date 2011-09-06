@@ -7,17 +7,17 @@
     if (typeof window.localStorage === 'undefined') {
         return alert('Get a better browser');
     }
-        
+
     $('input,textarea').placeholder();
-    
+
     var lastHour = localStorage['lastHour'] ? parseInt(localStorage['lastHour'],10) : 18;  // 6 o'clock
     var lastMin  = localStorage['lastMin']  ? parseInt(localStorage['lastMin'],10)  : 30;  // 30 minutes
     var day      = 24 * 60;
-    
+
     var that = $('#today');
     var form = that.find('form');
     var list = that.find('ol');
-    
+
     var db    = localStorage['today'];
     var last  = parseInt(localStorage['todayLastSaved'],10);
     var date  = new Date().getDate();
@@ -226,7 +226,14 @@
     }
     
     function sliderResize() {
-        var leftVal = ((lastHour * 60 + lastMin) / day) * 100 + '%';
+        var leftVal = (lastHour * 60 + lastMin) / day;
+        
+        if (leftVal < 1) {
+            leftVal = leftVal * 100;
+        }
+
+        leftVal = leftVal + '%';
+        
         $("#slider").css({
           left : leftVal,
           display : 'block'
@@ -294,11 +301,11 @@
     
     /** EVENT BINDINGS **/
     form.submit(handleForm);
-    list.find('li a.done').live('click', markAsDone);
-    list.find('li a.delete').live('click', deleteItem);
-    list.find('li a.edit').live('click', editItem);
-    list.find('li p').live('dblclick', editItem);
-    list.find('li a.save').live('click', saveItem);
+    list.delegate('li a.done', 'click', markAsDone);
+    list.delegate('li a.delete', 'click', deleteItem);
+    list.delegate('li a.edit', 'click', editItem);
+    list.delegate('li p', 'dblclick', editItem);
+    list.delegate('li a.save', 'click', saveItem);
     $('#sort').click(sortList);
     $('#slider').live('mousedown',startMovingSlider);
     setCounter();
