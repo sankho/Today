@@ -1,86 +1,84 @@
-var TODO = {};
+Object.prototype.size = function() {
+    var size = 0, key;
+    for (key in this) {
+        if (this.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
+var TODO = {
+    collections : {},
+    namespace   : 'TODO_'
+};
 
 TODO.publish = TODO.subscribe = TODO.unsubscribe = $.noop;
 
-TODO.keyStores = (function() {
+TODO.localDB = (function() {
     
-    var store = {};
+    var db            = localStorage;
+    var namespace     = TODO.namespace;
+    var api           = {};
 
-    function getCollection(collection) {
-        store[collection] = store[collection] || [];
-        return store[collection];
+    api.saveCollection = function(collection) {
+        db[namespace + collection] = JSON.stringify(TODO.collections[collection]);
     }
 
-    store.add = function(collection,key) {
-        var collection = getCollection(collection);
-        if (collection.indexOf(key) === -1) {
-            collection.push(key);
-        }
+    api.getCollection = function(collection) {
+        TODO.collections[collection] = db[namespace + collection] ? JSON.parse(db[namespace + collection]) : {};
+
+        return TODO.collections[collection];
     }
 
-    store.remove = function(collection,key) {
-        var collection = getCollection(collection);
-        if (collection.indexOf(key) !== -1) {
-            delete collection[key];
-        }
-    }
-
-    store.exists = function(collection,key) {
-        var collection = getCollection(collection);
-        return collection.indexOf(key) !== -1;
-    }
-
-    return store;
+    return api;
 
 }());
 
 TODO.baseModel = (function() {
-
-    var db            = localStorage;
-    var namespace     = 'TODO_';    // maintaining a namespace as localStorage is domain specific
     
     function baseModel() {
 
         var self = this;
 
-        this.hasDoc = function() {
-            return !!this.doc;
-        }
+        var namespace = TODO.namespace;
 
-        this.setDocId = function() {
-            if (this.hasDoc()) {
+        self.save = function() {
+            if (this.doc) {
+
+                var collection = TODO.localDB.getCollection(this.collection);
+
                 if (!this.doc._id) {
-                    this.doc._id = 'new_' + Math.random(1);
+                    this.doc._id = 'new_' + TODO.collections[this.collection].size();
                 }
+
+                TODO.collections[this.collection][this.doc._id] = this.doc;
+                TODO.localDB.saveCollection(this.collection);
+
+                TOOD.publish('item-saved',[this.doc]);
             }
         }
 
-        this.save = function() {
-            if (this.hasDoc()) {
-                if (!this.doc._id) {
-                    this.setDocId();
-                    keyStore[this.collection] = keyStore[this.collection] || [];
-                    var collection = keyStore[this.collection];
+        self.remove = function() {
+            delete TODO.collections[this.collection][this.doc._id];
+            TODO.localDB.saveCollection(this.collection);
+
+            TODO.publish('item-remove',[this.doc._id]);
+        }
+
+        self.getById = function(_id) {
+            var collection = TODO.collections[this.collection];
+            for (var item in collection) {
+                if (item === _id) {
+                    this.doc = collection[item];
+                    return this;
                 }
-                db[namespace + this.doc._id] = JSON.stringify(this.doc);
-
-                TODO.publish('db-save', [doc]);
             }
-        }
-
-        this.delete = function() {
-            delete db[namespace + this.doc._id];
-        }
-
-        this.getById = function(_id) {
-            this.doc = JSON.parse(db[namespace + _id]);
         }
 
     }
 
     return baseModel;
 
-}());
+})();
 
 TODO.item = function() {
     
@@ -101,7 +99,7 @@ TODO.item = function() {
 TODO.item.prototype = new TODO.baseModel();
 
 TODO.list = function() {
-    
+
     var self = this;
 
     this.doc = {
@@ -111,18 +109,23 @@ TODO.list = function() {
 
     this.collection = 'list';
 
-}
+};
+TODO.list.prototype = new TODO.baseModel();
 
 $(function() {
-
-    // var x = new TODO.item();
-    // x.doc.test = 'test';
-    // x.save();
-    // console.log(x);
 
     var app  = $('#today');
     var form = app.find('form');
     var list = app.find('ol');
+
+    var todos = TODO.localDB.getCollection('item');
+
+    for (var _id in todos) {
+        todo = todos[_id];
+        if (todo.text) {
+            writeListItem(todo,_id);
+        }
+    }
 
     function writeListItem(todo,key) {
         var item = $('<li></li>');
@@ -161,7 +164,87 @@ $(function() {
         }
     }
 
+    function deleteItem(e) {
+        var item = new TODO.item().getById(this.rel);
+        item.remove();
+        $(this).parent().remove();        
+    }
+
+    function markAsDone(e) {
+        var item = new TODO.item().getById(this.rel);
+        item.doc.done = !item.doc.done;
+        item.save();
+
+        e.preventDefault();
+        $(this).parent().toggleClass('done');
+    }
+
+    function editItem(e) {
+        e.preventDefault();
+        var that = $(this);
+        var key  = that.attr('rel');
+        var li   = that.parent();
+        var p    = li.find('p');
+        
+        if (p.is(':visible')) {
+            p.hide();
+            var text = p.text().replace(/"/g, '&quot;')
+            var form = $([
+                '<form rel="',key,'">',
+                    '<input type="text" value="',
+                    text,
+                    '" /><input type="submit" value="ok" />',
+                '</form>'
+            ].join(''));
+            
+            li.prepend(form);
+            
+            form.submit(function(e) {
+                e.preventDefault();
+                var text = form.find('input[type="text"]').val();
+                if (!text) {
+                    return alert('why not just delete it?');
+                } else {
+                    p.text(text);
+                    var item = new TODO.item().getById(key);
+                    item.doc.text = text;
+                    item.save();
+                    form.remove();
+                    p.show();
+                }
+            });
+        } else {
+            li.find('form').remove();
+            p.show();
+        }
+    }
+    
+    function saveItem(e) {
+        e.preventDefault();
+        var that  = $(this);
+        var key   = this.rel;
+        var li    = that.parent();
+        var saved = li.hasClass('save');
+        li.toggleClass('save');
+
+        if (saved) {
+            that.text('save for tomorrow');
+        } else {
+            that.text('saved for tomorrow');
+        }
+        
+        var item = new TODO.item().getById(this.rel);
+        item.doc.save = !saved;
+        item.save();
+        item = null;
+    }
+
     form.submit(handleForm);
+    app.delegate('a.delete','click',deleteItem);
+    app.delegate('a.done','click',markAsDone);
+    app.delegate('a.edit','click',editItem);
+    app.delegate('a.save','click',saveItem);
+
 
 });
 
