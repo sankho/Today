@@ -13,6 +13,30 @@ var TODO = {
 
 TODO.publish = TODO.subscribe = TODO.unsubscribe = $.noop;
 
+TODO.foreignDB = (function() {
+    
+    var api    = {};
+    var domain = 'http://localhost:8080/';
+
+    api.upsertRecord = function(record) {
+        var uri = 'upsert';
+
+    };
+
+    api.deleteRecord = function(_id) {
+        var uri = 'delete';
+    };
+
+    // ???
+    // how in the world will this work...?
+    api.syncLocal = function() {
+        var uri = 'sync';
+    }
+
+    return api;
+
+}());
+
 TODO.localDB = (function() {
     
     var db            = localStorage;
@@ -33,52 +57,46 @@ TODO.localDB = (function() {
 
 }());
 
-TODO.baseModel = (function() {
-    
-    function baseModel() {
+TODO.baseModel = function() {
 
-        var self = this;
+    var self = this;
 
-        var namespace = TODO.namespace;
+    var namespace = TODO.namespace;
 
-        self.save = function() {
-            if (this.doc) {
+    self.save = function() {
+        if (this.doc) {
 
-                var collection = TODO.localDB.getCollection(this.collection);
+            var collection = TODO.localDB.getCollection(this.collection);
 
-                if (!this.doc._id) {
-                    this.doc._id = 'new_' + TODO.collections[this.collection].size();
-                }
-
-                TODO.collections[this.collection][this.doc._id] = this.doc;
-                TODO.localDB.saveCollection(this.collection);
-
-                TOOD.publish('item-saved',[this.doc]);
+            if (!this.doc._id) {
+                this.doc._id = 'new_' + TODO.collections[this.collection].size();
             }
-        }
 
-        self.remove = function() {
-            delete TODO.collections[this.collection][this.doc._id];
+            TODO.collections[this.collection][this.doc._id] = this.doc;
             TODO.localDB.saveCollection(this.collection);
 
-            TODO.publish('item-remove',[this.doc._id]);
+            TOOD.publish('item-saved',[this.doc]);
         }
-
-        self.getById = function(_id) {
-            var collection = TODO.collections[this.collection];
-            for (var item in collection) {
-                if (item === _id) {
-                    this.doc = collection[item];
-                    return this;
-                }
-            }
-        }
-
     }
 
-    return baseModel;
+    self.remove = function() {
+        delete TODO.collections[this.collection][this.doc._id];
+        TODO.localDB.saveCollection(this.collection);
 
-})();
+        TODO.publish('item-remove',[this.doc._id]);
+    }
+
+    self.getById = function(_id) {
+        var collection = TODO.collections[this.collection];
+        for (var item in collection) {
+            if (item === _id) {
+                this.doc = collection[item];
+                return this;
+            }
+        }
+    }
+
+};
 
 TODO.item = function() {
     
@@ -165,12 +183,14 @@ $(function() {
     }
 
     function deleteItem(e) {
+        e.preventDefault();
         var item = new TODO.item().getById(this.rel);
         item.remove();
         $(this).parent().remove();        
     }
 
     function markAsDone(e) {
+        e.preventDefault();
         var item = new TODO.item().getById(this.rel);
         item.doc.done = !item.doc.done;
         item.save();
