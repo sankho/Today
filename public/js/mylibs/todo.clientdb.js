@@ -4,7 +4,6 @@ TODO.clientDB = (function() {
     
     var db            = localStorage;
     var namespace     = TODO.namespace;
-    var api           = {};
 
     function saveCollection(collection) {
         db[namespace + collection] = JSON.stringify(TODO.collections[collection]);
@@ -25,6 +24,8 @@ TODO.clientDB = (function() {
         saveCollection(collection);
     });
 
-    return api;
+    return {
+        getCollection : getCollection
+    };
 
 }());
