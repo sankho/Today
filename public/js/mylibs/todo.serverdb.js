@@ -3,14 +3,25 @@ var TODO = TODO || {};
 TODO.serverDB = (function() {
     
     var api    = {};
-    var domain = 'http://localhost:8080/';
+    var domain = '/';
 
-    api.upsertRecord = function(record) {
+    api.upsertDoc = function(doc) {
         var uri = 'upsert';
+
+        $.ajax({
+            url : domain + uri,
+            type : 'post',
+            data : {
+                doc : JSON.stringify(doc)
+            },
+            success : function(data) {
+                console.log('Server Response to Upsertion... ', data);
+            }
+        });
 
     };
 
-    api.deleteRecord = function(_id) {
+    api.deleteDoc = function(_id) {
         var uri = 'delete';
     };
 

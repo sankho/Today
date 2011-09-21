@@ -30,7 +30,7 @@ $(function() {
             save = 'saved';
         }
         
-        item.append('<a href="#" class="done" rel="' + key + '">mark as done</a><a href="#" class="save" rel="' + key + '">' + save + ' for tomorrow</a><a href="#" class="delete" rel="' + key + '">delete</a><a href="#" class="edit" rel="' + key + '">edit</a>');
+        item.append('<a href="#" class="done" rel="' + key + '">mark as done</a><!--<a href="#" class="save" rel="' + key + '">' + save + ' for tomorrow</a>--><a href="#" class="delete" rel="' + key + '">delete</a><a href="#" class="edit" rel="' + key + '">edit</a>');
         item.attr('rel',key);
         list.prepend(item);
     }
