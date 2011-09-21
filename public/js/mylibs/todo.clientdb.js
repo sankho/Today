@@ -13,7 +13,7 @@ TODO.clientDB = (function() {
     api.getCollection = function(collection) {
         TODO.collections[collection] = db[namespace + collection] ? JSON.parse(db[namespace + collection]) : {};
 
-        return TODO.collections[collection];
+        return TODO.collections[collection] ? TODO.collections[collection] : [];
     }
 
     return api;

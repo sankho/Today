@@ -8,9 +8,9 @@ TODO.baseModel = function() {
 
     self.save = function() {
         if (this.doc) {
-
             var collection = TODO.clientDB.getCollection(this.collection);
 
+            /** this needs some major love. when you're feeling smarter that is. */
             if (!this.doc._id) {
                 // might want to find something other than sha256. shorter, even.
                 //this.doc._id = 'new_' + Sha256.hash(Math.floor(Math.random()*999));
