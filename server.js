@@ -32,12 +32,18 @@ app.configure('production', function(){
 
 
 
-
 // Routes
 
 app.get('/', function(req, res){
   res.render('index', {
     title: 'Express'
+  });
+});
+
+app.get('/cache.manifest', function(req,res) {
+  res.header('Content-Type', 'text/cache-manifest');
+  res.render('appcache', {
+    layout : false
   });
 });
 
@@ -48,8 +54,6 @@ app.post('/upsert', function(req,res) {
   });
 
 });
-
-
 
 
 
