@@ -13,7 +13,8 @@ TODO.baseModel = function() {
 
             if (!this.doc._id) {
                 // might want to find something other than sha256. shorter, even.
-                this.doc._id = 'new_' + Sha256.hash(Math.floor(Math.random(1)*999));
+                //this.doc._id = 'new_' + Sha256.hash(Math.floor(Math.random()*999));
+                this.doc._id = 'new_' + Math.floor(Math.random()*999 + collection.length);
                 // probably should check if this ID exists elsewhere first, meh
             }
 
