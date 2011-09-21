@@ -12,7 +12,7 @@ TODO.baseModel = function() {
             var collection = TODO.clientDB.getCollection(this.collection);
 
             if (!this.doc._id) {
-                // might want to find something better than sha256. shorter, even.
+                // might want to find something other than sha256. shorter, even.
                 this.doc._id = 'new_' + Sha256.hash(Math.floor(Math.random(1)*999));
                 // probably should check if this ID exists elsewhere first, meh
             }
