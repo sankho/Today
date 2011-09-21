@@ -53,7 +53,7 @@ app.get('/cache.manifest', function(req,res) {
 app.post('/upsert', function(req,res) {
   
   res.json({
-    whatup : 'nigga'
+    naughty : 'language'
   });
 
 });
