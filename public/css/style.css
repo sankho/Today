@@ -338,6 +338,10 @@ hr#a-full-day {
       width:80%;
   }
 
+  #today form #add {
+      float:right;
+  }
+
   #today ol {
       padding:0;
       width:100%;
