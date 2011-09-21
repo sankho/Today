@@ -4,12 +4,14 @@ $(function() {
     var form = app.find('form');
     var list = app.find('ol');
 
-    var todos = TODO.clientDB.getCollection('item');
+    if (!!localStorage) {
+        var todos = TODO.clientDB.getCollection('item');
 
-    for (var _id in todos) {
-        todo = todos[_id];
-        if (todo.text) {
-            writeListItem(todo);
+        for (var _id in todos) {
+            todo = todos[_id];
+            if (todo.text) {
+                writeListItem(todo);
+            }
         }
     }
 
