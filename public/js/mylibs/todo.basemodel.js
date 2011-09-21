@@ -20,7 +20,7 @@ TODO.baseModel = function() {
 
             TODO.collections[this.collection][this.doc._id] = this.doc;
             TODO.clientDB.saveCollection(this.collection);
-            TODO.serverDB.upsertDoc(this.doc);
+            //TODO.serverDB.upsertDoc(this.doc);
 
             TODO.publish('item-saved',[this.doc]);
         }
