@@ -31,6 +31,15 @@ TODO.serverDB = (function() {
         var uri = 'sync';
     }
 
+    /** subscribe to internal events **/
+    TODO.subscribe('doc-save',function(doc,collection) {
+        //saveCollection(collection);
+    });
+
+    TODO.subscribe('doc-remove',function(doc,collection) {
+        //saveCollection(collection);
+    });
+
     return api;
 
 }());

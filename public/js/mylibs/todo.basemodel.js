@@ -19,10 +19,8 @@ TODO.baseModel = function() {
             }
 
             TODO.collections[this.collection][this.doc._id] = this.doc;
-            TODO.clientDB.saveCollection(this.collection);
-            //TODO.serverDB.upsertDoc(this.doc);
 
-            TODO.publish('item-saved',[this.doc]);
+            TODO.publish('doc-save',[this.doc,this.collection]);
         }
     }
 
@@ -30,7 +28,7 @@ TODO.baseModel = function() {
         delete TODO.collections[this.collection][this.doc._id];
         TODO.clientDB.saveCollection(this.collection);
 
-        TODO.publish('item-remove',[this.doc._id]);
+        TODO.publish('doc-remove',[this.doc._id]);
     }
 
     self.getById = function(_id) {

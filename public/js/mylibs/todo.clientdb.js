@@ -6,15 +6,24 @@ TODO.clientDB = (function() {
     var namespace     = TODO.namespace;
     var api           = {};
 
-    api.saveCollection = function(collection) {
+    function saveCollection(collection) {
         db[namespace + collection] = JSON.stringify(TODO.collections[collection]);
     }
 
-    api.getCollection = function(collection) {
+    function getCollection(collection) {
         TODO.collections[collection] = db[namespace + collection] ? JSON.parse(db[namespace + collection]) : {};
 
         return TODO.collections[collection] ? TODO.collections[collection] : [];
     }
+
+    /** subscribe to internal events **/
+    TODO.subscribe('doc-save',function(doc,collection) {
+        saveCollection(collection);
+    });
+
+    TODO.subscribe('doc-remove',function(doc,collection) {
+        saveCollection(collection);
+    });
 
     return api;
 
