@@ -44,7 +44,7 @@ app.get('/cache.manifest', function(req,res) {
   res.header('Content-Type', 'text/cache-manifest');
   res.header('Cache-Control', 'no-cache');
   res.header('Expires', 'Thu, 01 Dec 1994 16:00:00 GMT'); // aka it expired already
-
+ 
   res.render('appcache', {
     layout : false
   });
