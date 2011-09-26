@@ -25,7 +25,8 @@ TODO.clientDB = (function() {
     });
 
     return {
-        getCollection : getCollection
+        getCollection  : getCollection,
+        saveCollection : saveCollection
     };
 
 }());

@@ -105,7 +105,7 @@ baseModel.model = function() {
 	}
 
 	this.remove = function(callback) {
-		if (this.doc._id) {
+		if (this.doc && this.doc._id) {
 			db.remove(this.doc,this.collection,callback);
 		}
 	}

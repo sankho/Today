@@ -2,10 +2,9 @@ var TODO = TODO || {};
 
 TODO.serverDB = (function() {
     
-    var api    = {};
     var domain = '/';
 
-    api.upsertDoc = function(doc,collection) {
+    function upsertDoc(doc,collection) {
         var uri = 'upsert';
 
         $.ajax({
@@ -17,31 +16,48 @@ TODO.serverDB = (function() {
             },
             success : function(data) {
                 console.log('Server Response to Upsertion... ', data);
-                // need to take this response and update row / new ID if needed.
+
+                TODO.collections[collection][doc._id]._id = data.doc._id;
+                TODO.clientDB.saveCollection(collection);
+                TODO.publish('server-upsert',[data.doc,doc]);
             }
         });
 
     };
 
-    api.removeDoc = function(_id) {
+    function removeDoc(_id,collection) {
         var uri = 'remove';
+
+        $.ajax({
+            url : domain + uri,
+            type : 'post',
+            data : {
+                doc_id     : _id,
+                collection : collection
+            },
+            success : function(data) {
+                console.log('Server Response to Removal... ', data);
+
+                TODO.publish('server-remove',[_id,collection]);
+            }
+        });
     };
 
     // ???
     // how in the world will this work...?
-    api.syncLocal = function() {
+    function syncLocal() {
         var uri = 'sync';
     }
 
     /** subscribe to internal events **/
     TODO.subscribe('doc-save',function(doc,collection) {
-        api.upsertDoc(doc,collection);
+        upsertDoc(doc,collection);
     });
 
     TODO.subscribe('doc-remove',function(doc_id,collection) {
-        //saveCollection(collection);
+        removeDoc(doc_id,collection);
     });
 
-    return api;
+    return {};
 
 }());

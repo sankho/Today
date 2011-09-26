@@ -4,15 +4,36 @@ $(function() {
     var form = app.find('form');
     var list = app.find('ol');
 
-    if (!!localStorage) {
+    if (!!localStorage && !navigator.onLine) {
         var todos = TODO.clientDB.getCollection('item');
 
         for (var _id in todos) {
-            todo = todos[_id];
+            var todo = todos[_id];
             if (todo.text) {
                 writeListItem(todo);
             }
         }
+    } else {
+        var todos = $.ajax({
+            url : '/get-items',
+            success : function(data) {
+                var todos  = data.items;
+                var _todos = {};
+
+                for (var _id in todos) {
+                    var todo = todos[_id];
+                    if (todo.text && !_todos[todo._id]) {
+                        
+                        _todos[todo._id] = todo;
+    
+                        writeListItem(todo);
+                    }
+                }
+                
+                TODO.collections.item = _todos;
+                TODO.clientDB.saveCollection('item');
+            }
+        });
     }
 
     function writeListItem(todo,key) {
@@ -54,14 +75,16 @@ $(function() {
 
     function deleteItem(e) {
         e.preventDefault();
-        var item = new TODO.item().getById(this.rel);
+        var item = new TODO.item();
+        item.getById(this.rel);
         item.remove();
-        $(this).parent().remove();        
+        $(this).parent().remove();
     }
 
     function markAsDone(e) {
         e.preventDefault();
-        var item = new TODO.item().getById(this.rel);
+        var item = new TODO.item();
+        item.getById(this.rel);
         item.doc.done = !item.doc.done;
         item.save();
 
@@ -96,7 +119,8 @@ $(function() {
                     return alert('why not just delete it?');
                 } else {
                     p.text(text);
-                    var item = new TODO.item().getById(key);
+                    var item = new TODO.item();
+                    item.getById(key);
                     item.doc.text = text;
                     item.save();
                     form.remove();
@@ -123,10 +147,21 @@ $(function() {
             that.text('saved for tomorrow');
         }
         
-        var item = new TODO.item().getById(this.rel);
+        var item = new TODO.item();
+        item.getById(this.rel);
         item.doc.save = !saved;
         item.save();
         item = null;
+    }
+
+    function handleServerUpsert(doc,old) {
+        if (old._id.indexOf('new') !== -1) {
+            var $item = $('#today ol li[rel="' + old._id + '"]');
+            $item.attr('rel',doc._id);
+            $item.children().each(function() {
+                $(this).attr('rel',doc._id);
+            });
+        }
     }
 
     form.submit(handleForm);
@@ -135,5 +170,6 @@ $(function() {
     app.delegate('a.edit','click',editItem);
     app.delegate('a.save','click',saveItem);
 
+    TODO.subscribe('server-upsert', handleServerUpsert);
 
 });

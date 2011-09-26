@@ -70,6 +70,35 @@ app.post('/upsert', function(req,res) {
 });
 
 
+app.post('/remove', function(req,res) {
+
+  var thing = new models.item();
+  var id = req.param('doc_id');
+
+  thing.getById(id,function(doc) {
+    thing.doc = doc;
+
+    thing.remove(function() {
+    console.log(id,doc);
+      res.json({
+        success : 'true'
+      });
+    });
+  });
+
+});
+
+
+app.get('/get-items', function(req,res) {
+  
+  // could prolly rewrite this to take an ID for filtering.
+  var items = new models.item().find({},function(items) {
+    res.json({
+      items : items
+    });
+  });
+
+});
 
 
 
