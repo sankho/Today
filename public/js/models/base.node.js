@@ -5,7 +5,20 @@ var Db 			= require('mongodb').Db,
   	Server 		= require('mongodb').Server,
   	sys			= require('sys');
 
-var client = new Db('todo', new Server("127.0.0.1", 27017, {}));
+if (process.env.NODE_ENV !== 'production') {
+	var client = new Db('todo', new Server("127.0.0.1", 27017, {}));	
+} else {
+
+	// mongo lab??
+	var client = new Db('todo', new Server("dbh43.mongolab.com", 27437, {
+		user : 'sankho',
+		password : 't0d0 t0d@y'
+	}));
+
+	client.open(function(err,client) {
+		console.log(err);
+	});
+}
 
 var db = (function() {
 
