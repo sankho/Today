@@ -1,3 +1,10 @@
+var TODO = TODO || {};
+
+if (typeof window === 'undefined' && typeof global !== 'undefined') {
+    TODO = module.exports;
+    TODO.baseModel = require('./base.node.js').model;
+}
+
 TODO.item = function() {
     
     var self = this;

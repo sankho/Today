@@ -20,7 +20,7 @@ TODO.clientDB = (function() {
         saveCollection(collection);
     });
 
-    TODO.subscribe('doc-remove',function(doc,collection) {
+    TODO.subscribe('doc-remove',function(doc_id,collection) {
         saveCollection(collection);
     });
 

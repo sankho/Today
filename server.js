@@ -28,15 +28,13 @@ app.configure('production', function(){
 
 
 
-
-
-
+var models = require('./public/js/models');
 
 // Routes
 
 app.get('/', function(req, res){
   res.render('index', {
-    title: 'Express'
+    key: 'val'
   });
 });
 
@@ -52,8 +50,21 @@ app.get('/cache.manifest', function(req,res) {
 
 app.post('/upsert', function(req,res) {
   
-  res.json({
-    naughty : 'language'
+  var doc = JSON.parse(req.param('doc'));
+
+  if (doc._id.indexOf('new') !== -1) {
+    doc._id = undefined;
+  }
+
+  var collection = req.param('collection');
+
+  var thing = new models[collection]();
+
+  thing.doc = doc;
+  thing.save(function(doc) {
+    res.json({
+      doc : doc
+    });
   });
 
 });

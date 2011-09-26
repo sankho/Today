@@ -26,19 +26,13 @@ TODO.baseModel = function() {
 
     self.remove = function() {
         delete TODO.collections[this.collection][this.doc._id];
-        TODO.clientDB.saveCollection(this.collection);
-
-        TODO.publish('doc-remove',[this.doc._id]);
+        TODO.publish('doc-remove',[this.doc._id,this.collection]);
     }
 
     self.getById = function(_id) {
         var collection = TODO.collections[this.collection];
-        for (var item in collection) {
-            if (item === _id) {
-                this.doc = collection[item];
-                return this;
-            }
-        }
+        this.doc = collection[_id];
+        return this;
     }
 
 };
