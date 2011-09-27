@@ -6,7 +6,7 @@ TODO.baseModel = function() {
 
     var namespace = TODO.namespace;
 
-    self.save = function() {
+    this.save = function() {
         if (this.doc) {
             var collection = TODO.clientDB.getCollection(this.collection);
 
@@ -24,15 +24,19 @@ TODO.baseModel = function() {
         }
     }
 
-    self.remove = function() {
+    this.remove = function() {
         delete TODO.collections[this.collection][this.doc._id];
         TODO.publish('doc-remove',[this.doc._id,this.collection]);
     }
 
-    self.getById = function(_id) {
+    this.getById = function(_id) {
         var collection = TODO.collections[this.collection];
         this.doc = collection[_id];
         return this;
+    }
+
+    this.find = function(args) {
+        // collection search.
     }
 
 };

@@ -1,40 +1,11 @@
-$(function() {
+(function() {
 
-    var app  = $('#today');
-    var form = app.find('form');
-    var list = app.find('ol');
+    //procedural initilization stuff at the bottom
 
-    if (!!localStorage && !navigator.onLine) {
-        var todos = TODO.clientDB.getCollection('item');
-
-        for (var _id in todos) {
-            var todo = todos[_id];
-            if (todo.text) {
-                writeListItem(todo);
-            }
-        }
-    } else {
-        var todos = $.ajax({
-            url : '/get-items',
-            success : function(data) {
-                var todos  = data.items;
-                var _todos = {};
-
-                for (var _id in todos) {
-                    var todo = todos[_id];
-                    if (todo.text && !_todos[todo._id]) {
-                        
-                        _todos[todo._id] = todo;
-    
-                        writeListItem(todo);
-                    }
-                }
-                
-                TODO.collections.item = _todos;
-                TODO.clientDB.saveCollection('item');
-            }
-        });
-    }
+    var app     = $('#today');
+    var form    = app.find('form');
+    var list    = app.find('ol');
+    var list_id = window.location.hash.replace('#','');
 
     function writeListItem(todo,key) {
         var item = $('<li></li>');
@@ -63,8 +34,9 @@ $(function() {
         var what = $('#what').val();
         
         if (what.length > 0) {
-            var item = new TODO.item();
+            var item      = new TODO.item();
             item.doc.text = what;
+            item.list_id  = list_id;
             item.save();
             writeListItem(item.doc);
             this.reset();
@@ -164,12 +136,61 @@ $(function() {
         }
     }
 
-    form.submit(handleForm);
-    app.delegate('a.delete','click',deleteItem);
-    app.delegate('a.done','click',markAsDone);
-    app.delegate('a.edit','click',editItem);
-    app.delegate('a.save','click',saveItem);
+    function theTiesThatBind() {
+        form.submit(handleForm);
+        app.delegate('a.delete','click',deleteItem);
+        app.delegate('a.done','click',markAsDone);
+        app.delegate('a.edit','click',editItem);
+        app.delegate('a.save','click',saveItem);
+        TODO.subscribe('server-upsert', handleServerUpsert);
+    }
 
-    TODO.subscribe('server-upsert', handleServerUpsert);
+    // dom readiness. meaningless at the bottom of the body.
+    $(function() {
+        if (list_id) {
+            //set namespace for local storage
+            TODO.namespace += '_' + list_id;
+            TODO.serverDB.init();
+            TODO.clientDB.init();
+    
+            $.ajax({
+                url : '/get-items/' + list_id,
+                success : function(data) {
+                    var todos  = data.items;
+                    var _todos = {};
+    
+                    for (var _id in todos) {
+                        var todo = todos[_id];
+                        if (todo.text && !_todos[todo._id]) {
+                            _todos[todo._id] = todo;
+                            writeListItem(todo);
+                        }
+                    }
+                    
+                    TODO.collections.item = _todos;
+                    TODO.clientDB.saveCollection('item');
+                    theTiesThatBind();
+                }
+            });
+        } else if (!!localStorage) {
+    
+            //lolz.
+            $('.meta.time').text('saving locally');
+        
+            TODO.clientDB.init();
+            
+            var todos = TODO.clientDB.getCollection('item');
+            if (todos) {
+                for (var _id in todos) {
+                    var todo = todos[_id];
+                    if (todo.text) {
+                        writeListItem(todo);
+                    }
+                }
+            }
 
-});
+            theTiesThatBind();
+        }
+    });
+
+}());

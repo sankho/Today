@@ -15,16 +15,18 @@ TODO.clientDB = (function() {
         return TODO.collections[collection] ? TODO.collections[collection] : [];
     }
 
-    /** subscribe to internal events **/
-    TODO.subscribe('doc-save',function(doc,collection) {
-        saveCollection(collection);
-    });
-
-    TODO.subscribe('doc-remove',function(doc_id,collection) {
-        saveCollection(collection);
-    });
 
     return {
+        init : function() {
+            /** subscribe to internal events **/
+            TODO.subscribe('doc-save',function(doc,collection) {
+                saveCollection(collection);
+            });
+        
+            TODO.subscribe('doc-remove',function(doc_id,collection) {
+                saveCollection(collection);
+            });
+        },
         getCollection  : getCollection,
         saveCollection : saveCollection
     };

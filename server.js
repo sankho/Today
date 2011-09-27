@@ -88,10 +88,11 @@ app.post('/remove', function(req,res) {
 });
 
 
-app.get('/get-items', function(req,res) {
+app.get('/get-items/:id', function(req,res) {
   
-  // could prolly rewrite this to take an ID for filtering.
-  var items = new models.item().find({},function(items) {
+  var items = new models.item().find({
+    list_id : req.param('id')
+  },function(items) {
     res.json({
       items : items
     });
@@ -99,9 +100,18 @@ app.get('/get-items', function(req,res) {
 
 });
 
+app.get('/create-list', function(req,res) {
+  
+  var list = new models.list();
+  list.doc.name = 'test';
+  list.save(function(doc) {
+    list.doc = doc;
+    console.log(doc);
+    res.end();
+    //res.redirect('/#' + doc._id);
+  });
 
-
-
+});
 
 
 

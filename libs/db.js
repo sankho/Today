@@ -47,13 +47,14 @@ db.find = function(args,sort,collection,callback) {
 
 db.save = function(doc,collection,callback) {
 	openCollection(collection, function (err, collection) {
-		var criteria = {
-			_id : new client.bson_serializer.ObjectID(doc._id)
-		};
+		var criteria = doc._id ? {
+		  _id : new client.bson_serializer.ObjectID(doc._id)
+		} : {};
 		delete doc['_id'];
+
 		collection.update(criteria, {$set: doc}, {safe:true,upsert:true}, function(err, result) {
-			console.log('trying to save... ', doc, err);
 			client.close();
+			
 			typeof callback === 'function' ? callback(err ? err : result) : '';
 		});
 	});

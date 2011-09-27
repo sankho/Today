@@ -49,15 +49,17 @@ TODO.serverDB = (function() {
         var uri = 'sync';
     }
 
-    /** subscribe to internal events **/
-    TODO.subscribe('doc-save',function(doc,collection) {
-        upsertDoc(doc,collection);
-    });
-
-    TODO.subscribe('doc-remove',function(doc_id,collection) {
-        removeDoc(doc_id,collection);
-    });
-
-    return {};
+    return {
+        init : function() {
+            /** subscribe to internal events **/
+            TODO.subscribe('doc-save',function(doc,collection) {
+                upsertDoc(doc,collection);
+            });
+        
+            TODO.subscribe('doc-remove',function(doc_id,collection) {
+                removeDoc(doc_id,collection);
+            });
+        }
+    };
 
 }());
