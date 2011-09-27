@@ -2,7 +2,7 @@ var TODO = TODO || {};
 
 if (typeof window === 'undefined' && typeof global !== 'undefined') {
     TODO = module.exports;
-    TODO.baseModel = require('./base.node.js').model;
+    TODO.baseModel = require('../../../libs/baseModel.js').model;
 }
 
 TODO.item = function() {
@@ -10,7 +10,7 @@ TODO.item = function() {
     var self = this;
 
     this.doc = {
-        _id     : '',
+        _id     : undefined,
         list_id : '',
         text    : '',
         order   : 0,
@@ -28,7 +28,7 @@ TODO.list = function() {
     var self = this;
 
     this.doc = {
-        _id  : '',
+        _id  : undefined,
         name : ''
     };
 
