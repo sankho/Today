@@ -18,6 +18,9 @@ TODO.clientDB = (function() {
 
     return {
         init : function() {
+            
+            namespace     = TODO.namespace;
+            
             /** subscribe to internal events **/
             TODO.subscribe('doc-save',function(doc,collection) {
                 saveCollection(collection);
