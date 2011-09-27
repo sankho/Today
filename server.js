@@ -79,7 +79,6 @@ app.post('/remove', function(req,res) {
     thing.doc = doc;
 
     thing.remove(function() {
-    console.log(id,doc);
       res.json({
         success : 'true'
       });

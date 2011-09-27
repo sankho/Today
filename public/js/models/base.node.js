@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 		if(err) console.error(err);
 	});	
 } else {
-	// mongo lab??
+	// mongo lab.
 	var client = new Db('todo', new Server("dbh43.mongolab.com", 27437));
 	client.open(function(err){
 		if(err) console.error(err);
