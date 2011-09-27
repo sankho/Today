@@ -6,17 +6,18 @@ var Db 			= require('mongodb').Db,
   	sys			= require('sys');
 
 if (process.env.NODE_ENV !== 'production') {
-	var client = new Db('todo', new Server("127.0.0.1", 27017, {}));	
+	var client = new Db('todo', new Server("127.0.0.1", 27017, {}));
+	client.open(function(err){
+		if(err) console.error(err);
+	});	
 } else {
-
 	// mongo lab??
-	var client = new Db('todo', new Server("dbh43.mongolab.com", 27437, {
-		user : 'sankho',
-		password : 't0d0 t0d@y'
-	}));
-
-	client.open(function(err,client) {
-		console.log(err);
+	var client = new Db('todo', new Server("dbh43.mongolab.com", 27437));
+	client.open(function(err){
+		if(err) console.error(err);
+		client.authenticate( "sankho", "t0d0 t0d@y", function(err){
+			if(err) return console.error(err);
+		});
 	});
 }
 
@@ -26,22 +27,22 @@ var db = (function() {
 
 	api.getById = function(id,collection,callback) {
 		try {
-		client.open(function(err, p_client) {
+		//client.open(function(err, p_client) {
 		    client.collection(collection, function (err, collection) {
 				collection.findOne({
 					_id : new client.bson_serializer.ObjectID(id)
 				}, function(err, result) {
-					client.close();
+					//client.close();
   					typeof callback === 'function' ? callback(err ? err : result) : '';
     			});
     		});
-    	});
+    	//});
 		} catch(e) {}
 	}
 
 	api.find = function(args,sort,_collection,callback) {
 		try {
-		client.open(function(err, p_client) {
+		//client.open(function(err, p_client) {
 		    client.collection(_collection, function (err, collection) {
 				collection.find(args,sort,function(err, result) {
 					if (!err) {
@@ -50,50 +51,50 @@ var db = (function() {
                     	    if(item != null) {//null signifies end of iterator
                     	    	results.push(item);
                     	    } else {                	
-								client.close();
+								//client.close();
   								typeof callback === 'function' ? callback(results) : '';
                     	    }
                     	});
                 	}
     			});
     		});
-    	});
+    	//});
 		} catch(e) {}
 	}
 
 	api.getAll = function(collection, callback) {
 		try {
-		client.open(function(err, p_client) {
+//		client.open(function(err, p_client) {
 		    client.collection(collection, function (err, collection) {
 				collection.find().toArray(function(err, results) {
-					client.close();
+					//client.close();
   					typeof callback === 'function' ? callback(err ? err : result) : '';
     			});
     		});
-    	});
+//    	});
 		} catch(e) {}
 	}
 
 	api.save = function(doc,collection,callback) {
 		try {
-		client.open(function(err, p_client) {
+//		client.open(function(err, p_client) {
 		    client.collection(collection, function (err, collection) {
     	    	collection.save(doc, function(err, result) {
-  					client.close();
+  					//client.close();
   					typeof callback === 'function' ? callback(err ? err : doc) : '';
 		    	});
 			});
-		});
+//		});
 		} catch(e) {}
 	}
 
 	api.remove = function(doc,collection,callback) {
 		try {
-		client.open(function(err, p_client) {
+//		client.open(function(err, p_client) {
 		    client.collection(collection, function (err, collection) {
 				collection.findAndModify(doc, [], {}, {remove:true}, callback);
 			});
-		});
+//		});
 		} catch(e) {}
 	}
 
