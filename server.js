@@ -62,6 +62,7 @@ app.post('/upsert', function(req,res) {
 
   thing.doc = doc;
   thing.save(function(doc) {
+    console.log(doc);
     res.json({
       doc : doc
     });
@@ -103,12 +104,9 @@ app.get('/get-items/:id', function(req,res) {
 app.get('/create-list', function(req,res) {
   
   var list = new models.list();
-  list.doc.name = 'test';
   list.save(function(doc) {
     list.doc = doc;
-    console.log(doc);
-    res.end();
-    //res.redirect('/#' + doc._id);
+    res.redirect('/#' + doc._id);
   });
 
 });

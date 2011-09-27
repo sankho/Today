@@ -46,17 +46,27 @@ db.find = function(args,sort,collection,callback) {
 }
 
 db.save = function(doc,collection,callback) {
-	openCollection(collection, function (err, collection) {
-		var criteria = doc._id ? {
-		  _id : new client.bson_serializer.ObjectID(doc._id)
-		} : {};
-		delete doc['_id'];
 
-		collection.update(criteria, {$set: doc}, {safe:true,upsert:true}, function(err, result) {
-			client.close();
-			
-			typeof callback === 'function' ? callback(err ? err : result) : '';
-		});
+	openCollection(collection, function (err, collection) {
+		if (doc._id) {
+			doc._id = new client.bson_serializer.ObjectID(doc._id);
+	
+			// fix this to something that returns the document; notice it's returning
+			// the same doc to the callback that is sent to the save function orginally.
+			// this is being collection.save doesn't return any params in the callback :(
+			collection.save(doc, function() {
+				client.close();
+				typeof callback === 'function' ? callback(doc) : '';
+			});
+		} else {
+			collection.insert(doc,{safe:true},function(err,result) {
+				client.close();
+				if (result.length === 1) {
+					result = result[0];
+				}
+				typeof callback === 'function' ? callback(err ? err : result) : '';
+			});
+		}
 	});
 }
 

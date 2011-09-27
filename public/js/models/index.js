@@ -10,7 +10,7 @@ TODO.item = function() {
     var self = this;
 
     this.doc = {
-        _id     : undefined,
+        _id     : '',
         list_id : '',
         text    : '',
         order   : 0,
@@ -28,7 +28,7 @@ TODO.list = function() {
     var self = this;
 
     this.doc = {
-        _id  : undefined,
+        _id  : '',
         name : ''
     };
 

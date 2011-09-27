@@ -34,9 +34,9 @@
         var what = $('#what').val();
         
         if (what.length > 0) {
-            var item      = new TODO.item();
-            item.doc.text = what;
-            item.list_id  = list_id;
+            var item          = new TODO.item();
+            item.doc.text     = what;
+            item.doc.list_id  = list_id;
             item.save();
             writeListItem(item.doc);
             this.reset();
@@ -127,7 +127,7 @@
     }
 
     function handleServerUpsert(doc,old) {
-        if (old._id.indexOf('new') !== -1) {
+        if (old._id && old._id.indexOf('new') !== -1) {
             var $item = $('#today ol li[rel="' + old._id + '"]');
             $item.attr('rel',doc._id);
             $item.children().each(function() {
