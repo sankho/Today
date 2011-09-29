@@ -62,7 +62,6 @@ app.post('/upsert', function(req,res) {
 
   thing.doc = doc;
   thing.save(function(doc) {
-    console.log(doc);
     res.json({
       doc : doc
     });
