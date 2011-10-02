@@ -8,8 +8,6 @@ TODO.baseModel = function() {
 
     this.save = function() {
         if (this.doc) {
-            var collection = TODO.clientDB.getCollection(this.collection);
-
             /** this needs some major love. when you're feeling smarter that is. */
             if (!this.doc._id) {
                 // might want to find something other than sha256. shorter, even.
@@ -42,7 +40,7 @@ TODO.baseModel = function() {
             return TODO.publish('find-on-server',[args,this.collection,callback]);
         }
 
-        var collection = TODO.clientDB.getCollection(this.collection);
+        var collection = TODO.collections[this.collection];
         var items      = [];
 
         // nice programming, smart guy

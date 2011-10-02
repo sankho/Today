@@ -354,6 +354,7 @@ hr#a-full-day {
 @media screen and (max-width: 500px) {
   #today form #what {
       width: 70%;
+      font:normal 18px/22px Arial;
   }
 }
 
