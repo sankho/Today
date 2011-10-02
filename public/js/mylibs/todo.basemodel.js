@@ -35,8 +35,24 @@ TODO.baseModel = function() {
         return this;
     }
 
-    this.find = function(args) {
-        // collection search.
+    // nice programming, douche
+    this.find = function(args,callback) {
+        var collection = TODO.clientDB.getCollection(this.collection);
+        var items      = [];
+        
+        for (item in collection) {
+            var addItem = true;
+            var item    = collection[item];
+            for (arg in args) {
+                if (item[arg] !== args[arg]) {
+                    addItem = false;
+                }
+            }
+            if (addItem) {
+                items.push(item);
+            }
+        }
+        callback(items);
     }
 
 };

@@ -41,7 +41,7 @@ TODO.list = function() {
             self.doc = doc[0];
 
             new TODO.item().find({
-                'list_id' : self.doc._id.toString()     // WOAH toString!
+                list_id : self.doc._id.toString()     // WOAH toString!
             }, function(items) {
                 callback(items,self.doc);
             });
@@ -54,9 +54,7 @@ TODO.list = function() {
         }, function(doc) {
             if (doc.length === 0) {
                 self.doc.name = name;
-                self.save(function(doc) {
-                    callback(doc);
-                });
+                self.save(callback);
             } else {
                 callback(false);
             }
