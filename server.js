@@ -69,6 +69,22 @@ app.post('/upsert', function(req,res) {
 
 });
 
+app.post('/find', function(req,res) {
+
+  var args = req.param('args');
+  delete args['size'];  // wtf is this shit about? what if I want a key to be size?? where is this coming from?
+
+  var collection = req.param('collection');
+
+  var thing = new models[collection]();
+  thing.find(args,function(doc) {
+    res.json({
+      doc : doc
+    });
+  });
+
+});
+
 
 app.post('/remove', function(req,res) {
 

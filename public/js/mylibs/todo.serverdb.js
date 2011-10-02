@@ -41,7 +41,7 @@ TODO.serverDB = (function() {
                 TODO.publish('server-remove',[_id,collection]);
             }
         });
-    };
+    }
 
     // ???
     // how in the world will this work...?
@@ -49,16 +49,34 @@ TODO.serverDB = (function() {
         var uri = 'sync';
     }
 
+    function findOnServer(args,collection,callback) {
+        var uri = 'find';
+        
+        $.ajax({
+            url : domain + uri,
+            type : 'post',
+            data : {
+                args       : args,
+                collection : collection
+            },
+            success : function(data) {
+                callback(data.doc);
+            }
+        });
+    }
+
     return {
         init : function() {
             /** subscribe to internal events **/
-            TODO.subscribe('doc-save',function(doc,collection) {
+            TODO.subscribe('doc-save', function(doc,collection) {
                 upsertDoc(doc,collection);
             });
         
-            TODO.subscribe('doc-remove',function(doc_id,collection) {
+            TODO.subscribe('doc-remove', function(doc_id,collection) {
                 removeDoc(doc_id,collection);
             });
+
+            TODO.subscribe('find-on-server', findOnServer)
         }
     };
 

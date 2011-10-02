@@ -35,11 +35,17 @@ TODO.baseModel = function() {
         return this;
     }
 
-    // nice programming, douche
-    this.find = function(args,callback) {
+    this.find = function(args,foreign,callback) {
+        if (typeof foreign === 'function' && typeof callback === 'undefined') {
+            callback = foreign;
+        } else if (foreign === true) {
+            return TODO.publish('find-on-server',[args,this.collection,callback]);
+        }
+
         var collection = TODO.clientDB.getCollection(this.collection);
         var items      = [];
-        
+
+        // nice programming, smart guy
         for (item in collection) {
             var addItem = true;
             var item    = collection[item];
