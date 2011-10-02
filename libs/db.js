@@ -5,9 +5,9 @@
 
 var db = module.exports;
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'production') {
 	var client = new mongoDB('todo', new Server("127.0.0.1", 27017, {}));
-} else if (process.env.NODE_ENV === 'production') {
+} else {
 	var client = new mongoDB('todo', new Server("dbh43.mongolab.com", 27437));
 }
 
