@@ -49,7 +49,7 @@ app.get('/cache.manifest', function(req,res) {
 });
 
 app.post('/upsert', function(req,res) {
-  
+
   var doc = JSON.parse(req.param('doc'));
 
   if (doc._id.indexOf('new') !== -1) {
@@ -87,30 +87,28 @@ app.post('/remove', function(req,res) {
 
 });
 
-
-app.get('/get-items/:id', function(req,res) {
+app.get('/get-items/:name', function(req,res) {
   
-  var items = new models.item().find({
-    list_id : req.param('id')
-  },function(items) {
+  var list = new models.list().getItemsByName(req.params.name, function(items,doc) {
     res.json({
-      items : items
+      list_id : doc._id,
+      items   : items
     });
   });
 
 });
 
-app.get('/create-list', function(req,res) {
+app.post('/create-list', function(req,res) {
   
-  var list = new models.list();
-  list.save(function(doc) {
-    list.doc = doc;
-    res.redirect('/#' + doc._id);
+  var name = req.param('name');
+  new models.list().createByName(name,function(doc) {
+    var success = doc !== false;
+    res.json({
+      success : success
+    });
   });
 
 });
-
-
 
 app.listen(app.settings.env === 'production' ? 12033 : 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

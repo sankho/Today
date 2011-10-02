@@ -2,10 +2,12 @@
 
     //procedural initilization stuff at the bottom
 
-    var app     = $('#today');
-    var form    = app.find('form');
-    var list    = app.find('ol');
-    var list_id = window.location.hash.replace('#','');
+    var app       = $('#today');
+    var form      = app.find('form');
+    var list      = app.find('ol');
+    var list_name = window.location.hash.replace('#','');
+
+    var list_id;
 
     function writeListItem(todo,key) {
         var item = $('<li></li>');
@@ -136,26 +138,55 @@
         }
     }
 
+    function newList(e) {
+        e.preventDefault();
+
+        var name = prompt('Please choose a name.','name')
+
+        if (name) {
+            $.ajax({
+                url  : '/create-list',
+                type : 'post',
+                data : {
+                    name : name
+                },
+                success : function(data) {
+                    console.log(data);
+                    if (data.success) {
+                        window.location.href = '/#' + name;
+                        window.location.reload(true);
+                    } else {
+                        alert('name\'s taken');
+                    }
+                }
+            });
+        }
+    }
+
     function theTiesThatBind() {
         form.submit(handleForm);
         app.delegate('a.delete','click',deleteItem);
         app.delegate('a.done','click',markAsDone);
         app.delegate('a.edit','click',editItem);
         app.delegate('a.save','click',saveItem);
+
+        $('#new-list').click(newList);
+
         TODO.subscribe('server-upsert', handleServerUpsert);
     }
 
     // dom readiness. meaningless at the bottom of the body.
     $(function() {
-        if (list_id) {
+        if (list_name) {
             //set namespace for local storage
-            TODO.namespace += '_' + list_id;
+            TODO.namespace += '_' + list_name;
             TODO.serverDB.init();
             TODO.clientDB.init();
     
             $.ajax({
-                url : '/get-items/' + list_id,
+                url : '/get-items/' + list_name,
                 success : function(data) {
+                    list_id    = data.list_id;
                     var todos  = data.items;
                     var _todos = {};
     
