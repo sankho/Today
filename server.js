@@ -126,5 +126,19 @@ app.post('/create-list', function(req,res) {
 
 });
 
+app.get('/test', function(req,res) {
+
+  function fibonacci(n) {
+    if (n < 2)
+      return 1;
+    else
+      return fibonacci(n-2) + fibonacci(n-1);
+  }
+
+  var fib = fibonacci(40);
+  res.end(fib.toString());
+
+});
+
 app.listen(app.settings.env === 'production' ? 12033 : 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
