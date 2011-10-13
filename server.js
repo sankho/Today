@@ -176,6 +176,13 @@ app.get('/test', function(req,res) {
 
 });
 
-// app.listen(app.settings.env === 'production' ? 12033 : 3000);
-app.listen(process.env.PORT || 3000);
+var port = process.env.PORT;
+
+if (app.settings.env === 'production' && !port) {
+  port = 12033;
+} else {
+  port = 3000;
+}
+
+app.listen(port);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
