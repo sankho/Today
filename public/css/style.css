@@ -194,7 +194,11 @@ hr#a-full-day {
   height:349px;
   background:transparent url(../images/ajax.png) no-repeat top center;
   opacity:1;
-  -webkit-transition:0.5s opacity linear;
+  -webkit-transition:1.5s opacity linear;
+}
+
+#loading.ghost {
+  opacity:0;
 }
 
 #name {

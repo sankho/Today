@@ -15,12 +15,14 @@ TODO.serverDB = (function() {
                 collection : collection
             },
             success : function(data) {
-                console.log('Server Response to Upsertion... ', data);
+                console.log('Server Response to Upsertion... ', doc, data);
 
-                TODO.collections[collection][doc._id]._id = data.doc._id;
-                TODO.clientDB.saveCollection(collection);
-                TODO.publish('server-upsert',[data.doc,doc]);
-                callback();
+                if (TODO.collections[collection][doc._id]) {
+                    TODO.collections[collection][doc._id]._id = data.doc._id;
+                    TODO.clientDB.saveCollection(collection);
+                    TODO.publish('server-upsert',[data.doc,doc]);
+                    typeof callback === 'function' ? callback() : null;
+                }
             }
         });
 

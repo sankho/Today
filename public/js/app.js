@@ -9,7 +9,7 @@
     var list      = app.find('ol');
     var list_name = window.location.hash.replace('#','');
 
-    var list_id;
+    var list_id   = list_name ? localStorage[list_name] : undefined;
 
     function writeListItem(todo,key) {
         var item = $('<li></li>');
@@ -163,9 +163,9 @@
         });
     }
 
-    function loadAnimation(callback) {
-        list.slideUp();
-        loading.toggleClass('invisible');
+    function toggleLoad(callback) {
+        list.slideToggle();
+        loading.toggleClass('ghost');
     }
 
     function theTiesThatBind() {
@@ -182,13 +182,14 @@
     }
 
     function getItems() {
-        console.log('fetching');
+        toggleLoad();
         $.ajax({
             url : '/get-items/' + list_name,
             success : function(data) {
-                list_id    = data.list_id;
-                var todos  = data.items;
-                var _todos = {};
+                list_id                 = data.list_id;
+                localStorage[list_name] = list_id;
+                var todos               = data.items;
+                var _todos              = {};
     
                 for (var _id in todos) {
                     var todo = todos[_id];
@@ -201,37 +202,33 @@
                 TODO.collections.item = _todos;
                 TODO.clientDB.saveCollection('item');
                 theTiesThatBind();
+                toggleLoad();
             }
         });
     }
 
-    function sync(callback,i) {
-        console.log(callback);
+    function sync(callback) {
         var uri   = 'sync';
         var items = TODO.clientDB.getCollection('item');
         var size  = items.size();
-        var i     = i || 0;
         var x     = 0;
+        toggleLoad();
 
         for(var id in items) {
-            if (i < size && x === i && id !== size) {
-                x++;
-                i++;
-                var doc = items[id];
-                if (doc._id) {
-                    var item = new TODO.item();
-                    item.doc = doc;
-                    //if (i === size) {
-                        var cb = function() {
-                            setTimeout(function() {
-                                sync(callback,i)
-                            },2000);
-                        }
-                    //}
-                    item.save(cb);
+            x++;
+            var doc = items[id];
+            if (doc._id === id) {
+                var item = new TODO.item();
+                item.doc = doc;
+                item.doc.list_id = list_id;
+                console.log(x,size);
+                if (x === size) {
+                    setTimeout(callback,(100 * (x+1)));
+                    toggleLoad();
                 }
-            } else {
-                setTimeout(callback,2000);
+                setTimeout(function() {
+                    item.save();
+                },(100 * x));
             }
         }
     }
