@@ -81,16 +81,16 @@ TODO.serverDB = (function() {
 
     return {
         init : function() {
-            /** subscribe to internal events **/
-            TODO.subscribe('doc-save', function(doc,collection) {
-                upsertDoc(doc,collection);
-            });
-        
-            TODO.subscribe('doc-remove', function(doc_id,collection) {
-                removeDoc(doc_id,collection);
-            });
-
-            TODO.subscribe('find-on-server', findOnServer)
+                /** subscribe to internal events **/
+                TODO.subscribe('doc-save', function(doc,collection) {
+                    upsertDoc(doc,collection);
+                });
+            
+                TODO.subscribe('doc-remove', function(doc_id,collection) {
+                    removeDoc(doc_id,collection);
+                });
+    
+                TODO.subscribe('find-on-server', findOnServer);
         },
         sync : sync
     };

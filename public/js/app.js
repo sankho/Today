@@ -221,15 +221,18 @@
                 var item = new TODO.item();
                 item.doc = doc;
                 item.doc.list_id = list_id;
-                console.log(x,size);
                 if (x === size) {
                     setTimeout(callback,(100 * (x+1)));
                     toggleLoad();
                 }
-                setTimeout(function() {
-                    item.save();
-                },(100 * x));
+                saveItem(item,x);
             }
+        }
+
+        function saveItem(item,x) {
+            setTimeout(function() {
+                item.save();
+            },(100 * x));
         }
     }
 

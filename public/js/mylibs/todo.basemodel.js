@@ -29,6 +29,9 @@ TODO.baseModel = function() {
 
     this.getById = function(_id) {
         var collection = TODO.collections[this.collection];
+        if (!collection) {
+            console.log('fuck');
+        }
         this.doc = collection[_id];
         return this;
     }
