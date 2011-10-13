@@ -259,7 +259,7 @@
 
             } else {
 
-                TODO.serverDB.init();
+                TODO.serverDB ? TODO.serverDB.init() : '';
 
                 if (localStorage['beenOffline'] === 'true') {
                     localStorage['beenOffline'] = false;

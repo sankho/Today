@@ -54,6 +54,7 @@ app.get('/cache.manifest', function(req,res) {
   res.render('appcache', {
     layout : false
   });
+  console.log('getting cache');
 });
 
 app.post('/upsert', function(req,res) {
