@@ -111,6 +111,10 @@ body {
     padding:20px 0 0 80px;
 }
 
+#item, #new-list {
+  display:none;
+}
+
 #today .header h1 {
     font:bold 70px/140px Helvetica;
     color:#e1e1e1;
@@ -176,7 +180,7 @@ hr#a-full-day {
     display:none;
 }
 
-#today form #what {
+#today form #what, #name {
     font:normal 22px/22px Arial;
     padding:7px 8px;
     width:685px;
@@ -185,11 +189,23 @@ hr#a-full-day {
     
 }
 
+#loading {
+  width:100%;
+  height:349px;
+  background:transparent url(../images/ajax.png) no-repeat top center;
+  opacity:1;
+  -webkit-transition:0.5s opacity linear;
+}
+
+#name {
+  width:65%;
+}
+
     #what.placeholder { color:#bbb; }
     #what::-webkit-input-placeholder { color:#bbb; }
     #what::-moz-placeholder { color:#bbb; }
 
-#today form #add {    
+#today form #add, #add-list {    
     font:normal 22px/22px Helvetica;
     padding:8px 10px;
     background:#000;

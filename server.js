@@ -49,7 +49,6 @@ app.get('/cache.manifest', function(req,res) {
 });
 
 app.post('/upsert', function(req,res) {
-
   var doc = JSON.parse(req.param('doc'));
 
   if (doc._id.indexOf('new') !== -1) {
@@ -62,6 +61,7 @@ app.post('/upsert', function(req,res) {
 
   thing.doc = doc;
   thing.save(function(doc) {
+    console.log('attempting upsertion',doc);
     res.json({
       doc : doc
     });
@@ -104,7 +104,7 @@ app.post('/remove', function(req,res) {
 });
 
 app.get('/get-items/:name', function(req,res) {
-  
+  console.log('getting these items son.');
   var list = new models.list().getItemsByName(req.params.name, function(items,doc) {
     res.json({
       list_id : doc._id,
@@ -115,7 +115,7 @@ app.get('/get-items/:name', function(req,res) {
 });
 
 app.post('/create-list', function(req,res) {
-  
+  console.log('creating a list');
   var name = req.param('name');
   new models.list().createByName(name,function(doc) {
     var success = doc !== false;
@@ -125,6 +125,33 @@ app.post('/create-list', function(req,res) {
   });
 
 });
+
+app.post('/sync-items', function(req,res) {
+  console.log('syncing items');
+  var items = req.param('items');
+  for (var doc in items) {
+    if (doc === 'size') {
+      res.json({
+        success : true
+      });
+    } else {
+      doc = items[doc];
+      delete doc['size'];
+      if (doc._id) {
+        if (doc._id.indexOf('new') !== -1) {
+          doc._id = undefined;
+        }
+        saveItem(doc);
+      }
+    }
+  }
+});
+
+function saveItem(doc) {
+  var item = new models.item();
+  item.doc = doc;
+  item.save();
+}
 
 app.get('/test', function(req,res) {
 

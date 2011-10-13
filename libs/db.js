@@ -61,7 +61,7 @@ db.save = function(doc,collection,callback) {
 		} else {
 			collection.insert(doc,{safe:true},function(err,result) {
 				client.close();
-				if (result.length === 1) {
+				if (result && result.length === 1) {
 					result = result[0];
 				}
 				typeof callback === 'function' ? callback(err ? err : result) : '';

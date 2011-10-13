@@ -3,7 +3,9 @@
     //procedural initilization stuff at the bottom
 
     var app       = $('#today');
-    var form      = app.find('form');
+    var form      = app.find('form#item');
+    var newList   = app.find('form#new-list');
+    var loading   = $('#loading');
     var list      = app.find('ol');
     var list_name = window.location.hash.replace('#','');
 
@@ -131,95 +133,138 @@
     function handleServerUpsert(doc,old) {
         if (old._id && old._id.indexOf('new') !== -1) {
             var $item = $('#today ol li[rel="' + old._id + '"]');
-            $item.attr('rel',doc._id);
-            $item.children().each(function() {
-                $(this).attr('rel',doc._id);
-            });
+            if ($item) {
+                $item.attr('rel',doc._id);
+                $item.children().each(function() {
+                    $(this).attr('rel',doc._id);
+                });
+            }
         }
     }
 
-    function newList(e) {
+    function handleNewListForm(e) {
         e.preventDefault();
-
-        var name = prompt('Please choose a name.','name')
-
-        if (name) {
-            $.ajax({
-                url  : '/create-list',
-                type : 'post',
-                data : {
-                    name : name
-                },
-                success : function(data) {
-                    console.log(data);
-                    if (data.success) {
-                        window.location.href = '/#' + name;
-                        window.location.reload(true);
-                    } else {
-                        alert('name\'s taken');
-                    }
+        var name = $('#name').val();
+        $.ajax({
+            url  : '/create-list',
+            type : 'post',
+            data : {
+                name : name
+            },
+            success : function(data) {
+                console.log(data);
+                if (data.success) {
+                    window.location.href = '/#' + name;
+                    window.location.reload(true);
+                } else {
+                    alert('name\'s taken');
                 }
-            });
-        }
+            }
+        });
+    }
+
+    function loadAnimation(callback) {
+        list.slideUp();
+        loading.toggleClass('invisible');
     }
 
     function theTiesThatBind() {
         form.submit(handleForm);
+        
+        newList.submit(handleNewListForm);
+
         app.delegate('a.delete','click',deleteItem);
         app.delegate('a.done','click',markAsDone);
         app.delegate('a.edit','click',editItem);
         app.delegate('a.save','click',saveItem);
 
-        $('#new-list').click(newList);
-
         TODO.subscribe('server-upsert', handleServerUpsert);
+    }
+
+    function getItems() {
+        console.log('fetching');
+        $.ajax({
+            url : '/get-items/' + list_name,
+            success : function(data) {
+                list_id    = data.list_id;
+                var todos  = data.items;
+                var _todos = {};
+    
+                for (var _id in todos) {
+                    var todo = todos[_id];
+                    if (todo.text && !_todos[todo._id]) {
+                        _todos[todo._id] = todo;
+                        writeListItem(todo);
+                    }
+                }
+                
+                TODO.collections.item = _todos;
+                TODO.clientDB.saveCollection('item');
+                theTiesThatBind();
+            }
+        });
+    }
+
+    function sync(callback) {
+        console.log(callback);
+        var uri   = 'sync';
+        var items = TODO.clientDB.getCollection('item');
+        var size  = items.size();
+        var i     = 0;
+
+        for(var id in items) {
+            if (i < size && id !== size) {
+                i++;
+                var doc = items[id];
+                if (doc._id) {
+                    var item = new TODO.item();
+                    item.doc = doc;
+                    item.save();
+                }
+            } else {
+                setTimeout(2000,callback);
+            }
+        }
     }
 
     // dom readiness. meaningless at the bottom of the body.
     $(function() {
+
         if (list_name) {
             //set namespace for local storage
             TODO.namespace += '_' + list_name;
-            TODO.serverDB.init();
             TODO.clientDB.init();
-    
-            $.ajax({
-                url : '/get-items/' + list_name,
-                success : function(data) {
-                    list_id    = data.list_id;
-                    var todos  = data.items;
-                    var _todos = {};
-    
+
+            form.show();
+
+            if (navigator.onLine === false) {
+                localStorage['beenOffline'] = 'true'; 
+                var todos = TODO.clientDB.getCollection('item');
+                if (todos) {
                     for (var _id in todos) {
                         var todo = todos[_id];
-                        if (todo.text && !_todos[todo._id]) {
-                            _todos[todo._id] = todo;
+                        if (todo.text) {
                             writeListItem(todo);
                         }
                     }
-                    
-                    TODO.collections.item = _todos;
-                    TODO.clientDB.saveCollection('item');
-                    theTiesThatBind();
                 }
-            });
-        } else if (!!localStorage) {
     
-            //lolz.
-            $('.meta.time').text('saving locally');
-        
-            TODO.clientDB.init();
-            
-            var todos = TODO.clientDB.getCollection('item');
-            if (todos) {
-                for (var _id in todos) {
-                    var todo = todos[_id];
-                    if (todo.text) {
-                        writeListItem(todo);
-                    }
-                }
-            }
+                theTiesThatBind();
 
+            } else {
+
+                TODO.serverDB.init();
+
+                if (localStorage['beenOffline'] === 'true') {
+                    localStorage['beenOffline'] = false;
+                    sync(getItems);
+                } else {
+                    getItems();
+                }
+                
+            }
+        } else {
+            newList.show();
             theTiesThatBind();
         }
     });

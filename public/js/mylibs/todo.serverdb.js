@@ -1,4 +1,4 @@
-var TODO = TODO || {};
+ var TODO = TODO || {};
 
 TODO.serverDB = (function() {
     
@@ -43,10 +43,21 @@ TODO.serverDB = (function() {
         });
     }
 
-    // ???
-    // how in the world will this work...?
-    function syncLocal() {
-        var uri = 'sync';
+    function sync(callback,i) {
+          
+        /*
+        $.ajax({
+            url : '/sync-items',
+            type : 'post',
+            data : {
+                items : TODO.clientDB.getCollection('item'),
+            },
+            success : function(data) {
+                console.log('server response to sync ', data);
+                callback();
+            }
+        })
+        //*/
     }
 
     function findOnServer(args,collection,callback) {
@@ -77,7 +88,8 @@ TODO.serverDB = (function() {
             });
 
             TODO.subscribe('find-on-server', findOnServer)
-        }
+        },
+        sync : sync
     };
 
 }());

@@ -29,21 +29,19 @@
     <div id="today">
         <div class="header clearfix">
             <h1>Todo</h1>
-            <div class="meta top">&nbsp;</div>
-            <div class="meta"><a href="#" id="new-list">new list</a></div>
-            <div class="meta time"></div>
         </div>
-        <form>
+        <form id="item">
             <input type="text" id="what" placeholder="What do you need to do today? Type it here." />
             <input type="submit" id="add" value="Add" />
         </form>
+        <form id="new-list">
+            <input type="text" id="name" placeholder="Enter a list name." />
+            <input type="submit" id="add-list" value="create" />
+        </form>
         <ol></ol>
+        <div id="loading" class="invisible"></div>
     </div>
   </div> <!-- end of #container -->
-
-  <hr id="today-bar" />
-  <hr id="a-full-day" />
-  <div id="slider"></div>
   
   <script src="/js/libs/jquery-1.4.2.js"></script>
   
