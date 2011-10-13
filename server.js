@@ -140,5 +140,6 @@ app.get('/test', function(req,res) {
 
 });
 
-app.listen(app.settings.env === 'production' ? 12033 : 3000);
+// app.listen(app.settings.env === 'production' ? 12033 : 3000);
+app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
