@@ -6,7 +6,7 @@ TODO.baseModel = function() {
 
     var namespace = TODO.namespace;
 
-    this.save = function() {
+    this.save = function(callback) {
         if (this.doc) {
             /** this needs some major love. when you're feeling smarter that is. */
             if (!this.doc._id) {
@@ -18,7 +18,7 @@ TODO.baseModel = function() {
 
             TODO.collections[this.collection][this.doc._id] = this.doc;
 
-            TODO.publish('doc-save',[this.doc,this.collection]);
+            TODO.publish('doc-save',[this.doc,this.collection,callback]);
         }
     }
 

@@ -3,6 +3,14 @@
  * Module dependencies.
  */
 
+Object.prototype.size = function () {
+    var size = 0, key;
+    for (key in this) {
+        if (this.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
 var express = require('express');
 
 var app = module.exports = express.createServer();
@@ -56,10 +64,11 @@ app.post('/upsert', function(req,res) {
   }
 
   var collection = req.param('collection');
-
+  
   var thing = new models[collection]();
 
   thing.doc = doc;
+  
   thing.save(function(doc) {
     console.log('attempting upsertion',doc);
     res.json({

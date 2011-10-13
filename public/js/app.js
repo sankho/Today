@@ -205,24 +205,33 @@
         });
     }
 
-    function sync(callback) {
+    function sync(callback,i) {
         console.log(callback);
         var uri   = 'sync';
         var items = TODO.clientDB.getCollection('item');
         var size  = items.size();
-        var i     = 0;
+        var i     = i || 0;
+        var x     = 0;
 
         for(var id in items) {
-            if (i < size && id !== size) {
+            if (i < size && x === i && id !== size) {
+                x++;
                 i++;
                 var doc = items[id];
                 if (doc._id) {
                     var item = new TODO.item();
                     item.doc = doc;
-                    item.save();
+                    //if (i === size) {
+                        var cb = function() {
+                            setTimeout(function() {
+                                sync(callback,i)
+                            },2000);
+                        }
+                    //}
+                    item.save(cb);
                 }
             } else {
-                setTimeout(2000,callback);
+                setTimeout(callback,2000);
             }
         }
     }

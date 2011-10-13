@@ -4,7 +4,7 @@ TODO.serverDB = (function() {
     
     var domain = '/';
 
-    function upsertDoc(doc,collection) {
+    function upsertDoc(doc,collection,callback) {
         var uri = 'upsert';
 
         $.ajax({
@@ -20,6 +20,7 @@ TODO.serverDB = (function() {
                 TODO.collections[collection][doc._id]._id = data.doc._id;
                 TODO.clientDB.saveCollection(collection);
                 TODO.publish('server-upsert',[data.doc,doc]);
+                callback();
             }
         });
 
